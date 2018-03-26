@@ -1,0 +1,38 @@
+service: story-analyzer
+provider:
+  name: aws
+  runtime: nodejs6.10
+  # region: eu-west-1
+  timeout: 15
+package:
+ include:
+  - node_modules/**
+ exclude:
+functions:
+  registerUser:
+    handler: handlers/userhandler.registerUser
+    events:
+      - http:
+          path: user
+          method: post
+    timeout: 25
+  getUserStory:
+    handler: handlers/storyhandler.getUserStory
+    events:
+      - http:
+          path: userstory
+          method: get
+    timeout: 25
+  getToken:
+    handler: handlers/tokenhandler.getToken
+    events:
+      - http:
+          path: token
+          method: get
+    timeout: 25
+  # putUserStory:
+  #   handler: handler.putUserStory
+  #   events:
+  #     - http: userstory
+  #     method: post
+  #   timeout: 25
