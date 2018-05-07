@@ -5,11 +5,9 @@ import App from './App'
 import router from './router'
 import jQuery from 'jquery'
 global.jQuery = jQuery
-window.$ = jQuery;
-
 let Bootstrap = require('bootstrap')
 import '../src/css/bootstrap.min.css'
-import '../src/css/main.css'
+
 
 
 Vue.config.productionTip = false
