@@ -15,6 +15,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "glyphicons": "^0.2.0",
+    "jquery": "^3.3.1",
     "lapack": "^0.1.0",
     "natural": "^0.5.6",
     "popper.js": "^1.14.1",
