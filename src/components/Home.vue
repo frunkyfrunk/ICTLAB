@@ -1,10 +1,38 @@
 <template>
   <div>
-    <div class="col-md-12">
-            <h2 class="text-center">Import user stories</h2>
-            <hr class="hidden-xs">
-        </div>
-    <div v-for="story in stories" class="story row">
+    <div class="container">
+
+        <div class="wizard">
+            <div class="wizard-inner">
+                <div class="connecting-line"></div>
+                <ul class="nav nav-tabs" role="tablist">
+
+                    <li v-for="tab in tabs"
+            :class="{ active: step == tab.id }" role="presentation">
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                            <span class="round-tab">
+                                <i :class="tab.icon"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <form role="form">
+              <div class="container">
+                <div class="col-md-12">
+                <div class="tab-content">
+                    <div v-if="step == 1" class="tab-pane active" role="tabpanel">
+                        <h3>Step 1: Connect to your trello account</h3>
+                        <p>This is step {{step}}</p>
+                    </div>
+                    <div v-if="step == 2" class="tab-pane active" role="tabpanel">
+                        <h3>Step 2: Select a board</h3>
+                        <p>This is step {{step}}</p>
+                    </div>
+                    <div v-if="step == 3" class="tab-pane active" role="tabpanel">
+                        <h3>Step 3: Check your user stories</h3>
+                        <div v-for="story in stories" class="story row">
 <div class="col-md-9">
       <div class="form-group">
       <div class="input-group">
@@ -32,9 +60,21 @@
 <div class="col-md-3">
   <button type="button" class="btn btn-primary btn-lg">Save story</button>
 </div>
-    </div>
-    
-    </div>
+                    </div></div>
+                    <div v-if="step == 4" class="tab-pane active" role="tabpanel">
+                        <h3>Step {{step}}</h3>
+                        <p>This is step {{step}}</p>
+                    </div>
+                    <div class="float-right">
+                      <button type="button" class="btn btn-default prev-step" v-if="step > 1" v-on:click="step -= 1" >Previous</button>
+                            <button type="button" class="btn btn-primary next-step" v-if="step < 4" v-on:click="step += 1" >Next</button>
+                        </div>
+                </div>
+                </div>
+              </div>
+            </form>
+   </div>
+</div></div>
     
 </template>
 
@@ -43,7 +83,14 @@ export default {
   name: "Home",
   data() {
     return {
-      stories: []
+      stories: [],
+      step: 1,
+      tabs: [
+        { id: 1, icon: "fab fa-trello" },
+        { id: 2, icon: "fas fa-th-list" },
+        { id: 3, icon: "fas fa-user-check" },
+        { id: 4, icon: "fas fa-cloud-upload-alt" }
+      ]
     };
   },
   mounted() {
@@ -64,6 +111,12 @@ export default {
           c(response.map(i => i.name));
         }
       });
+    },
+    nextstep() {
+      this.step++;
+    },
+    previousstep() {
+      this.step--;
     },
     parseStory(story) {
       let sentences = story.split(",");

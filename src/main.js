@@ -7,7 +7,7 @@ import jQuery from 'jquery'
 global.jQuery = jQuery
 let Bootstrap = require('bootstrap')
 import '../src/css/bootstrap.min.css'
-
+import '../src/css/main.css'
 
 
 Vue.config.productionTip = false
