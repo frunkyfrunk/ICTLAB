@@ -20,6 +20,7 @@ function getStory(story) {
 }
 function categorize(story){
  let doc = nlp(story)
+ return doc.match("#Singular").match("!#Pronoun").out('array')
 }
 
 function getScore(story) {
