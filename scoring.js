@@ -1,8 +1,5 @@
 var nlp = require('compromise')
 
-
-
-
 //function to make a story object, from a story with a format like this:
 //<Role>, <Goal>, <Reason>
 function getStory(story) {
@@ -33,10 +30,9 @@ function getScore(story) {
   let nouns = doc.nouns().length;
   let adjectives = doc.adjectives().length;
   let adverbs = doc.adverbs().length;
-  let topics = doc.topics().length;
   let isquestion = (doc.questions().length > 0) ? true : false;
   let hasquotes = (doc.quotations().length > 0) ? true : false;
-  console.log(topics)
+  
   if (isquestion) {
     suggestions.push({
       penaltypoints: 0,
@@ -100,8 +96,6 @@ function getScore(story) {
       message: "Don't use too many adverbs. It's unnescessary and will make the user story harder to understand for the software engineers"
     })
   }
-
-
   return {
     score: (2 * lengthscore) + (2 * verbscore) + (2 * nounscore) + (2 * adjectivescore) + (2 * adverbscore),
     suggestions: suggestions
