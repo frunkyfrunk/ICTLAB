@@ -117,14 +117,16 @@ export default {
   mounted() {
     //let $self = this;
   },
-  filters:{
-    lastDate(date){
-      date = date.substring(0,9)
-      return date;
+  filters: {
+    lastDate(date) {
+      if (date != null) {
+        date = date.substring(0, 9);
+        return date;
+      }
     }
   },
   methods: {
-    selectItem(e){
+    selectItem(e) {
       this.selected = e;
     },
     selectBoard(e){
@@ -155,17 +157,17 @@ export default {
     updateCard(id, text){
       Trello.put(
         "/cards/" + id,
-        {name:text},
-        (result) => {
+        { name: text },
+        result => {
           //success
           alert("Updated");
         },
-        (result) => {
+        result => {
           //error
           alert("Update Failed");
           console.log(result);
         }
-      )
+      );
     },
     deleteCard(id){
       Trello.delete(
@@ -187,15 +189,15 @@ export default {
       var id = this.selected;
       Trello.boards.get(
         id + "/cards",
-        (result) => {
+        result => {
           //success
           this.cards = result;
         },
-        (result) => {
+        result => {
           //error
           alert(result);
         }
-      )
+      );
     },
     getListsFromBoards(){
       var id = this.selected;
@@ -213,38 +215,38 @@ export default {
     },
     getAllBoards(){
       Trello.members.get(
-        "me/boards", 
-        (result) => {
+        "me/boards",
+        result => {
           //success
           this.boards = result;
         },
-        (result) => {
+        result => {
           //error
           alert(result);
         }
-      )
+      );
     },
-    authenticate()
-    {
+    authenticate() {
       let $self = this;
       window.Trello.authorize({
-        type: 'popup',
-        name: 'Userstory Analyzer',
+        type: "popup",
+        name: "Userstory Analyzer",
         scope: {
-          read: 'true',
-          write: 'true' },
-        expiration: 'never',
+          read: "true",
+          write: "true"
+        },
+        expiration: "never",
         success: this.authenticationSuccess,
         error: this.authenticationFailure
       });
     },
     authenticationSuccess() {
-      alert("Authentication Succeedded")
+      alert("Authentication Succeedded");
       this.getAllBoards();
       this.step++;
     },
-    authenticationFailure(){
-      alert("Authentication Failed")
+    authenticationFailure() {
+      alert("Authentication Failed");
     },
     nextstep() {
       this.step++;
@@ -259,7 +261,6 @@ export default {
       this.getAllCardsOfSingleBoard();
       this.getListsFromBoards();
     }
-
   }
 };
 </script>
