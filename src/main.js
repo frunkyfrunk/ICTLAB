@@ -8,6 +8,7 @@ global.jQuery = jQuery
 let Bootstrap = require('bootstrap')
 import '../src/css/bootstrap.min.css'
 import '../src/css/main.css'
+import Swal from 'sweetalert2'
 
 
 Vue.config.productionTip = false

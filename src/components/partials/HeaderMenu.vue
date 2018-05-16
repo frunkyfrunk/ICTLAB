@@ -13,13 +13,13 @@
         <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/#/Stories">Stories</a>
+        <a class="nav-link" href="/Stories">Stories</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/#/Projects">Projects</a>
+        <a class="nav-link" href="/Projects">Projects</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/#/Settings">Settings</a>
+        <a class="nav-link" href="/Settings">Settings</a>
       </li>
     </ul>
   </div></div></div></div>

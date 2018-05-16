@@ -1,39 +1,236 @@
 <template>
   <div>
     <div class="container">
-
-        <div class="wizard">
-            <div class="wizard-inner">
-                <div class="connecting-line"></div>
-                <ul class="nav nav-tabs" role="tablist">
-
-                    <li v-for="tab in tabs"
-            :class="{ active: step == tab.id }" role="presentation">
-                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
-                            <span class="round-tab">
-                                <i :class="tab.icon"></i>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
+      <div class="wizard">
+        <div class="wizard-inner">
+          <div class="connecting-line"></div>
+          <ul class="nav nav-tabs" role="tablist">
+            <li v-for="tab in tabs" :key="tab.id"
+              v-bind:class="{ active: step == tab.id }" role="presentation">
+              <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                  <span class="round-tab">
+                    <i :class="tab.icon"></i>
+                  </span>
+                </a>
+              </li>
+            </ul>
+        </div>
+      <form role="form">
+        <div class="container">
+          <div class="col-md-12">
+            <div class="tab-content">
+              <div v-if="step == 1" class="tab-pane active" role="tabpanel">
+                  <h3>Step 1: Log In to your Trello account</h3>
+              </div>
+              <div v-if="step == 2" class="tab-pane active" role="tabpanel">
+                <h3>Step 2: Select a board</h3>
+                  <div class="row">
+                    <div class="col-md-3" 
+                      v-for="board in boards" 
+                      :key="board.id" 
+                      :class="{highlight:board.id == selected}"
+                      @click="selectItem(board.id)"
+                    >
+                      <div class="panel panel-default ">
+                        <div class="panel-heading board">{{board.name}}</div>
+                        <div class="panel-body">
+                          <h5>Last Activity</h5>
+                          {{board.dateLastActivity | lastDate}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>                        
+                </div>
+                <div v-if="step == 3" class="tab-pane active" role="tabpanel">
+                  <h3>Step 3: Select your user story to edit</h3>
+                  <h4>Your current score is: </h4>
+                  <div class="row">
+                    <div class="col-md-3" v-for="card in cards" 
+                      :key="card.id" 
+                      :class="{highlight:card.id == selected, hover:card.id == hover}"
+                      @click="selectItem(card.id)"
+                      @mouseover="hoverItem(card.id)"
+                    >
+                      <div class="panel panel-default ">
+                        <div class="panel-heading board">
+                          <input type="text" class="cardtext" placeholder="Userstory" aria-describedby="basic-addon1" v-bind:value=card.name></div>
+                        <div class="panel-body">
+                          <h5></h5>
+                          <button type="button" class="btn btn-default" @click="updateCard(card.id, card.name)">Edit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+                <div v-if="step == 4" class="tab-pane active" role="tabpanel">
+                  <h3>Step {{step}}</h3>
+                  <p>This is step {{step}}</p>
+                </div>
+                <div v-if="step == 1" class="float-right">
+                  <button @click="authenticate()" id="loginButton" type="button" class="btn btn-primary">Log in</button>
+                </div>
+                <div class="float-right">
+                 <button type="button" class="btn btn-default prev-step" v-if="step > 1" v-on:click="step -= 1" >Previous</button>
+                 <button type="button" class="btn btn-primary next-step" v-if="step < 4 && step > 1" v-on:click="nextstep()" >Next</button>
+                </div>
+              </div>
             </div>
+          </div>
+        </form>
+      </div>
+    </div>    
+  </div>
+</template>
+<script>
+export default {
+  name: "Home",
+  data() {
+    return {
+      selected: "",
+      hover:"",
+      cards: [],
+      boards: [],
+      step: 1,
+      tabs: [
+        { id: 1, icon: "fab fa-trello" },
+        { id: 2, icon: "fas fa-th-list" },
+        { id: 3, icon: "fas fa-user-check" },
+        { id: 4, icon: "fas fa-cloud-upload-alt" }
+      ]
+    };
+  },
+  mounted() {
+    //let $self = this;
+  },
+  filters:{
+    lastDate(date){
+      date = date.substring(0,9)
+      return date;
+    }
+  },
+  methods: {
+    selectItem(e){
+      this.selected = e;
+    },
+    hoverItem(e){
+      this.hover = e;
+    },
+    updateCard(id, text){
+      Trello.put(
+        "/cards/" + id,
+        {name:text},
+        (result) => {
+          //success
+          alert("Updated");
+          console.log(result);
+        },
+        (result) => {
+          //error
+          alert("Update Failed");
+          console.log(result)
+        }
+      )
+    },
+    getAllCardsOfSingleBoard() {
+    var id = this.selected;
+      Trello.boards.get(
+        id + "/cards",
+        (result) => {
+          //success
+          this.cards = result;
+          console.log(result);
+        },
+        (result) => {
+          //error
+          console.log(result)
+        }
+      )
+    },
+    getAllBoards(){
+      Trello.members.get(
+        "me/boards", 
+        (result) => {
+          //success
+          console.log(result);
+          this.boards = result;
+        },
+        (result) => {
+          //error
+          console.log(result)
+        }
+      )
+    },
+    authenticate()
+    {
+      let $self = this;
+      window.Trello.authorize({
+        type: 'popup',
+        name: 'Getting Started Application',
+        scope: {
+          read: 'true',
+          write: 'true' },
+        expiration: 'never',
+        success: this.authenticationSuccess,
+        error: this.authenticationFailure
+      });
+    },
+    authenticationSuccess() {
+      alert("Authentication Succeedded")
+      this.getAllBoards();
+      this.step++;
+    },
+    authenticationFailure(){
+      alert("Authentication Failed")
+    },
+    nextstep() {
+      this.step++;
+      if(this.step == 3){
+        this.getAllCardsOfSingleBoard();
+      }
+    },
+    previousstep() {
+      this.step--;
+    }
 
-            <form role="form">
-              <div class="container">
-                <div class="col-md-12">
-                <div class="tab-content">
-                    <div v-if="step == 1" class="tab-pane active" role="tabpanel">
-                        <h3>Step 1: Connect to your trello account</h3>
-                        <p>This is step {{step}}</p>
-                    </div>
-                    <div v-if="step == 2" class="tab-pane active" role="tabpanel">
-                        <h3>Step 2: Select a board</h3>
-                        <p>This is step {{step}}</p>
-                    </div>
-                    <div v-if="step == 3" class="tab-pane active" role="tabpanel">
-                        <h3>Step 3: Check your user stories</h3>
-                        <div v-for="story in stories" class="story row">
-<div class="col-md-9">
+  }
+};
+</script>
+//getData(c) {
+    //   // GET /someUrl
+    //   $.ajax({
+    //     url:
+    //       "https://api.trello.com/1/boards/BwXA7ZZT/cards/all?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f",
+    //     method: "GET",
+    //     success: function(response) {
+    //       c(response.map(i => i.name));
+    //     }
+    //   });
+    // },
+// $self.getData(function(response) {
+    //   $self.stories = $self.getStories(response);
+    // });
+    // check(reason) {},
+    // ,
+    // parseStory(story) {
+    //   let sentences = story.split(",");
+    //   let role = "";
+    //   let goal = "";
+    //   let reason = "";
+    //   if (sentences.length > 2) {
+    //     return {
+    //       role: sentences[0].replace(/.*As a\s+|As an\s+(.*).*/i, "$1"),
+    //       goal: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
+    //       reason: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
+    //       full: story
+    //     };
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    // getStories(stories) {
+    //   return stories.map(story => this.parseStory(story));
+    // }
+<!-- <div class="col-md-9">
       <div class="form-group">
       <div class="input-group">
     <div class="input-group-prepend">
@@ -59,84 +256,4 @@
 </div>
 <div class="col-md-3">
   <button type="button" class="btn btn-primary btn-lg">Save story</button>
-</div>
-                    </div></div>
-                    <div v-if="step == 4" class="tab-pane active" role="tabpanel">
-                        <h3>Step {{step}}</h3>
-                        <p>This is step {{step}}</p>
-                    </div>
-                    <div class="float-right">
-                      <button type="button" class="btn btn-default prev-step" v-if="step > 1" v-on:click="step -= 1" >Previous</button>
-                            <button type="button" class="btn btn-primary next-step" v-if="step < 4" v-on:click="step += 1" >Next</button>
-                        </div>
-                </div>
-                </div>
-              </div>
-            </form>
-   </div>
-</div></div>
-    
-</template>
-
-<script>
-export default {
-  name: "Home",
-  data() {
-    return {
-      stories: [],
-      step: 1,
-      tabs: [
-        { id: 1, icon: "fab fa-trello" },
-        { id: 2, icon: "fas fa-th-list" },
-        { id: 3, icon: "fas fa-user-check" },
-        { id: 4, icon: "fas fa-cloud-upload-alt" }
-      ]
-    };
-  },
-  mounted() {
-    let $self = this;
-    $self.getData(function(response) {
-      $self.stories = $self.getStories(response);
-    });
-  },
-  methods: {
-    check(reason) {},
-    getData(c) {
-      // GET /someUrl
-      $.ajax({
-        url:
-          "https://api.trello.com/1/boards/BwXA7ZZT/cards/all?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f",
-        method: "GET",
-        success: function(response) {
-          c(response.map(i => i.name));
-        }
-      });
-    },
-    nextstep() {
-      this.step++;
-    },
-    previousstep() {
-      this.step--;
-    },
-    parseStory(story) {
-      let sentences = story.split(",");
-      let role = "";
-      let goal = "";
-      let reason = "";
-      if (sentences.length > 2) {
-        return {
-          role: sentences[0].replace(/.*As a\s+|As an\s+(.*).*/i, "$1"),
-          goal: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
-          reason: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
-          full: story
-        };
-      } else {
-        return false;
-      }
-    },
-    getStories(stories) {
-      return stories.map(story => this.parseStory(story));
-    }
-  }
-};
-</script>
+</div> -->

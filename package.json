@@ -20,6 +20,7 @@
     "natural": "^0.5.6",
     "popper.js": "^1.14.1",
     "request": "^2.85.0",
+    "sweetalert2": "^7.20.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
