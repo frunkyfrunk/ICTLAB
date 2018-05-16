@@ -29,7 +29,7 @@
                       v-for="board in boards" 
                       :key="board.id" 
                       :class="{highlight:board.id == selected}"
-                      @click="selectItem(board.id)"
+                      @click="selectItem(board.id), selectBoard(board.id)"
                     >
                       <div class="panel panel-default ">
                         <div class="panel-heading board">{{board.name}}</div>
@@ -47,20 +47,32 @@
                   <div class="row">
                     <div class="col-md-3" v-for="card in cards" 
                       :key="card.id" 
-                      :class="{highlight:card.id == selected, hover:card.id == hover}"
-                      @click="selectItem(card.id)"
-                      @mouseover="hoverItem(card.id)"
                     >
                       <div class="panel panel-default ">
                         <div class="panel-heading board">
-                          <input type="text" class="cardtext" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></div>
+                          <textarea type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></textarea>
+                        </div>
                         <div class="panel-body">
-                          <h5></h5>
-                          <button type="button" class="btn btn-default" @click="updateCard(card.id, card.name)">Edit</button>
+                            <button type="button" class="btn btn-default" @click="updateCard(card.id, card.name)">Edit</button>
+                            <button type="button" class="btn btn-primary" @click="deleteCard(card.id)">Delete</button>
                         </div>
                       </div>
                     </div>
-                  </div>  
+                    <div class="col-md-3">
+                      <div class="panel panel-default ">
+                        <div class="panel-heading board">
+                          <textarea type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model="newCardName"></textarea>
+                          <h5>Select List</h5>
+                          <select v-model="selectedList" name="selectedList">
+                            <option v-for="list in this.boardLists" :key="list.id" :value="list.id">{{list.name}}</option>
+                          </select>
+                        </div>
+                        <div class="panel-body">
+                          <button type="button" class="btn btn-info" @click="addCard()">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>             
                 </div>
                 <div v-if="step == 4" class="tab-pane active" role="tabpanel">
                   <h3>Step {{step}}</h3>
@@ -70,8 +82,8 @@
                   <button @click="authenticate()" id="loginButton" type="button" class="btn btn-primary">Log in</button>
                 </div>
                 <div class="float-right">
-                 <button type="button" class="btn btn-default prev-step" v-if="step > 1" v-on:click="step -= 1" >Previous</button>
-                 <button type="button" class="btn btn-primary next-step" v-if="step < 4 && step > 1" v-on:click="nextstep()" >Next</button>
+                 <button type="button" class="btn btn-default prev-step" v-if="step > 2" v-on:click="step -= 1" >Previous</button>
+                 <button type="button" class="btn btn-primary next-step" v-if="step < 3 && step > 1" v-on:click="nextstep()" >Next</button>
                 </div>
               </div>
             </div>
@@ -88,6 +100,9 @@ export default {
     return {
       selected: "",
       hover:"",
+      newCardName:"",
+      selectedList:"",
+      boardLists: [],
       cards: [],
       boards: [],
       step: 1,
@@ -112,8 +127,30 @@ export default {
     selectItem(e){
       this.selected = e;
     },
+    selectBoard(e){
+      this.selectedBoard = e;
+    },
     hoverItem(e){
       this.hover = e;
+    },
+    addCard(){
+      Trello.post(
+        "/cards",
+        {
+          idList:this.selectedList,
+          name:this.newCardName
+        },
+        (result) => {
+          //success
+          alert("Added");
+          this.refreshData();
+        },
+        (result) => {
+          //error
+          alert("Add failed");
+          console.log(result);
+        }
+      )
     },
     updateCard(id, text){
       Trello.put(
@@ -122,7 +159,6 @@ export default {
         (result) => {
           //success
           alert("Updated");
-          console.log(result);
         },
         (result) => {
           //error
@@ -131,13 +167,43 @@ export default {
         }
       )
     },
+    deleteCard(id){
+      Trello.delete(
+        "/cards/" + id,
+        (result) => {
+          //success
+          alert("Deleted");
+          this.refreshData();
+        },
+        (result) => {
+          //error
+          alert("Delete Failed");
+          console.log(result);
+        }
+      )
+    },
     getAllCardsOfSingleBoard() {
-    var id = this.selected;
+      this.cards = "";
+      var id = this.selected;
       Trello.boards.get(
         id + "/cards",
         (result) => {
           //success
           this.cards = result;
+        },
+        (result) => {
+          //error
+          alert(result);
+        }
+      )
+    },
+    getListsFromBoards(){
+      var id = this.selected;
+      Trello.boards.get(
+        id + "/lists/",
+        (result) => {
+          //success
+          this.boardLists = result;
         },
         (result) => {
           //error
@@ -183,11 +249,15 @@ export default {
     nextstep() {
       this.step++;
       if(this.step == 3){
-        this.getAllCardsOfSingleBoard();
+        this.refreshData();
       }
     },
     previousstep() {
       this.step--;
+    },
+    refreshData(){
+      this.getAllCardsOfSingleBoard();
+      this.getListsFromBoards();
     }
 
   }
@@ -255,3 +325,7 @@ export default {
 <div class="col-md-3">
   <button type="button" class="btn btn-primary btn-lg">Save story</button>
 </div> -->
+
+                      // :class="{highlight:card.id == selected, hover:card.id == hover}"
+                      // @click="selectItem(card.id)"
+                      // @mouseover="hoverItem(card.id)"
