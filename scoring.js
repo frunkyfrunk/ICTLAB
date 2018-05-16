@@ -18,7 +18,9 @@ function getStory(story) {
     return false
   }
 }
-
+function categorize(story){
+ let doc = nlp(story)
+}
 
 function getScore(story) {
   let suggestions = []
@@ -102,9 +104,9 @@ function getScore(story) {
   };
 }
 
-console.log(getScore("As a developer, I preferly want to finalize the database table changes and additions for the release so that we don’t have to make changes to the model later."))
-console.log(getScore("As a Manny’s food service customer, I want to see different food item types displayed in different colors—RGB = #FF0000 for meats, #A52AFA for grains, and #808000 for vegetables and fruits—so that I can quickly identify my food items by food type."))
-console.log(getScore("As a business user, I would like a report of item profitability so that I can identify and highlight profitable items and consider what to do about underperforming items."))
+console.log(categorize("As a developer, I preferly want to finalize the database table changes and additions for the release so that we don’t have to make changes to the model later."))
+console.log(categorize("As a Manny’s food service customer, I want to see different food item types displayed in different colors—RGB = #FF0000 for meats, #A52AFA for grains, and #808000 for vegetables and fruits—so that I can quickly identify my food items by food type."))
+console.log(categorize("As a business user, I would like a report of item profitability so that I can identify and highlight profitable items and consider what to do about underperforming items."))
 
-console.log(getScore("As a developer, I want to finalize the database table changes so that we don’t have to make changes to the model later."))
-console.log(getScore("As a developer, I want to finalize the database table additions so that we don’t have to make changes to the model later."))
+console.log(categorize("As a developer, I want to finalize the database table changes so that we don’t have to make changes to the model later."))
+console.log(categorize("As a developer, I want to finalize the database table additions so that we don’t have to make changes to the model later."))
