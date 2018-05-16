@@ -53,7 +53,7 @@
                     >
                       <div class="panel panel-default ">
                         <div class="panel-heading board">
-                          <input type="text" class="cardtext" placeholder="Userstory" aria-describedby="basic-addon1" v-bind:value=card.name></div>
+                          <input type="text" class="cardtext" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></div>
                         <div class="panel-body">
                           <h5></h5>
                           <button type="button" class="btn btn-default" @click="updateCard(card.id, card.name)">Edit</button>
@@ -127,7 +127,7 @@ export default {
         (result) => {
           //error
           alert("Update Failed");
-          console.log(result)
+          console.log(result);
         }
       )
     },
@@ -138,11 +138,10 @@ export default {
         (result) => {
           //success
           this.cards = result;
-          console.log(result);
         },
         (result) => {
           //error
-          console.log(result)
+          alert(result);
         }
       )
     },
@@ -151,12 +150,11 @@ export default {
         "me/boards", 
         (result) => {
           //success
-          console.log(result);
           this.boards = result;
         },
         (result) => {
           //error
-          console.log(result)
+          alert(result);
         }
       )
     },
@@ -165,7 +163,7 @@ export default {
       let $self = this;
       window.Trello.authorize({
         type: 'popup',
-        name: 'Getting Started Application',
+        name: 'Userstory Analyzer',
         scope: {
           read: 'true',
           write: 'true' },
