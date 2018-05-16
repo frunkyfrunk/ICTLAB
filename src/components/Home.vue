@@ -27,11 +27,10 @@
                   <div class="row">
                     <div class="col-md-3" 
                       v-for="board in boards" 
-                      :key="board.id" 
-                      :class="{highlight:board.id == selected}"
+                      :key="board.id"
                       @click="selectItem(board.id), selectBoard(board.id)"
                     >
-                      <div class="panel panel-default ">
+                      <div class="panel panel-default" :class="{highlight:board.id == selected}">
                         <div class="panel-heading board">{{board.name}}</div>
                         <div class="panel-body">
                           <h5>Last Activity</h5>
@@ -98,8 +97,7 @@ export default {
   name: "Home",
   data() {
     return {
-      selected: "",
-      hover:"",
+      selected: "", 
       newCardName:"",
       selectedList:"",
       boardLists: [],
@@ -131,9 +129,6 @@ export default {
     },
     selectBoard(e){
       this.selectedBoard = e;
-    },
-    hoverItem(e){
-      this.hover = e;
     },
     addCard(){
       Trello.post(
