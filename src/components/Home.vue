@@ -76,16 +76,36 @@
                 <div v-if="step == 4" class="tab-pane active" role="tabpanel">
                   <h3>Results</h3>
                   <div class="row">
-                  <div class="col-md-3" v-for="card in lambdaCards" 
+                  <div class="col-md-12" v-for="card in lambdaCards" 
                       :key="card.id" 
                     >
-                      <div class="panel panel-default ">
+                      <div class="result container">
+                        <div class="row">
+            <div class="col-md-6">
                         <div class="panel-heading board">
                           <textarea readonly type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></textarea>
-                        <span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag}}</span>
-                        </div>
-
+                        </div></div><div class="col-md-6"> 
+                        <div id="specificChart" class="donut-size">
+      <div class="pie-wrapper">
+        <span class="label">
+          <span class="num">{{card.suggestions.data.score}}</span><span class="smaller">%</span>
+        </span>
+        <div v-if="card.suggestions.data.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.data.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+          <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+        </div>
+        <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.data.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+          <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+        </div>
+        
+        <div class="shadow" style="border-width: 0.1em;"></div>
+      </div>
+    </div></div><div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag.replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4><div v-for="suggestion in card.suggestions.data.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
+  <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
+</div></div>
                       </div>
+        </div>
                     </div>
                 </div>
                 </div>
@@ -260,7 +280,7 @@ export default {
         this.refreshData();
       }
       if (this.step == 4) {
-        this.lambdaCards = []
+        this.lambdaCards = [];
         this.cards.forEach(element => {
           this.getLambdas(element.name, element.id);
         });
@@ -299,7 +319,12 @@ export default {
           suggestions = response.data;
         })
         .catch(error => error);
-      this.lambdaCards.push({ id:id,name:story,suggestions: suggestions, tags: tags });
+      this.lambdaCards.push({
+        id: id,
+        name: story,
+        suggestions: suggestions,
+        tags: tags
+      });
     }
   }
 };
