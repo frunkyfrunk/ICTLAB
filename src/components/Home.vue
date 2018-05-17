@@ -74,15 +74,27 @@
                   </div>             
                 </div>
                 <div v-if="step == 4" class="tab-pane active" role="tabpanel">
-                  <h3>Step {{step}}</h3>
-                  <p>This is step {{step}}</p>
+                  <h3>Results</h3>
+                  <div class="row">
+                  <div class="col-md-3" v-for="card in lambdaCards" 
+                      :key="card.id" 
+                    >
+                      <div class="panel panel-default ">
+                        <div class="panel-heading board">
+                          <textarea readonly type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></textarea>
+                        <span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag}}</span>
+                        </div>
+
+                      </div>
+                    </div>
+                </div>
                 </div>
                 <div v-if="step == 1" class="float-right">
                   <button @click="authenticate()" id="loginButton" type="button" class="btn btn-primary">Log in</button>
                 </div>
                 <div class="float-right">
                  <button type="button" class="btn btn-default prev-step" v-if="step > 2" v-on:click="step -= 1" >Previous</button>
-                 <button type="button" class="btn btn-primary next-step" v-if="step < 3 && step > 1" v-on:click="nextstep()" >Next</button>
+                 <button type="button" class="btn btn-primary next-step" v-if="step < 4 && step > 1" v-on:click="nextstep()" >Next</button>
                 </div>
               </div>
             </div>
@@ -93,14 +105,16 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "Home",
   data() {
     return {
-      selected: "", 
-      newCardName:"",
-      selectedList:"",
+      selected: "",
+      newCardName: "",
+      selectedList: "",
       boardLists: [],
+      lambdaCards: [],
       cards: [],
       boards: [],
       step: 1,
@@ -111,9 +125,6 @@ export default {
         { id: 4, icon: "fas fa-cloud-upload-alt" }
       ]
     };
-  },
-  mounted() {
-    //let $self = this;
   },
   filters: {
     lastDate(date) {
@@ -127,29 +138,29 @@ export default {
     selectItem(e) {
       this.selected = e;
     },
-    selectBoard(e){
+    selectBoard(e) {
       this.selectedBoard = e;
     },
-    addCard(){
+    addCard() {
       Trello.post(
         "/cards",
         {
-          idList:this.selectedList,
-          name:this.newCardName
+          idList: this.selectedList,
+          name: this.newCardName
         },
-        (result) => {
+        result => {
           //success
           alert("Added");
           this.refreshData();
         },
-        (result) => {
+        result => {
           //error
           alert("Add failed");
           console.log(result);
         }
-      )
+      );
     },
-    updateCard(id, text){
+    updateCard(id, text) {
       Trello.put(
         "/cards/" + id,
         { name: text },
@@ -164,20 +175,20 @@ export default {
         }
       );
     },
-    deleteCard(id){
+    deleteCard(id) {
       Trello.delete(
         "/cards/" + id,
-        (result) => {
+        result => {
           //success
           alert("Deleted");
           this.refreshData();
         },
-        (result) => {
+        result => {
           //error
           alert("Delete Failed");
           console.log(result);
         }
-      )
+      );
     },
     getAllCardsOfSingleBoard() {
       this.cards = "";
@@ -194,21 +205,21 @@ export default {
         }
       );
     },
-    getListsFromBoards(){
+    getListsFromBoards() {
       var id = this.selected;
       Trello.boards.get(
         id + "/lists/",
-        (result) => {
+        result => {
           //success
           this.boardLists = result;
         },
-        (result) => {
+        result => {
           //error
           alert(result);
         }
-      )
+      );
     },
-    getAllBoards(){
+    getAllBoards() {
       Trello.members.get(
         "me/boards",
         result => {
@@ -245,16 +256,50 @@ export default {
     },
     nextstep() {
       this.step++;
-      if(this.step == 3){
+      if (this.step == 3) {
         this.refreshData();
+      }
+      if (this.step == 4) {
+        this.lambdaCards = []
+        this.cards.forEach(element => {
+          this.getLambdas(element.name, element.id);
+        });
       }
     },
     previousstep() {
       this.step--;
     },
-    refreshData(){
+    refreshData() {
       this.getAllCardsOfSingleBoard();
       this.getListsFromBoards();
+    },
+    async getLambdas(story, id) {
+      var tags;
+      var suggestions;
+      await axios
+        .post(
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
+          {
+            body: story
+          }
+        )
+        .then(function(response) {
+          tags = response.data;
+        })
+        .catch(error => error);
+
+      await axios
+        .post(
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
+          {
+            body: story
+          }
+        )
+        .then(function(response) {
+          suggestions = response.data;
+        })
+        .catch(error => error);
+      this.lambdaCards.push({ id:id,name:story,suggestions: suggestions, tags: tags });
     }
   }
 };
