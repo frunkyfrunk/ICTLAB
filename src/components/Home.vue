@@ -28,7 +28,7 @@
                     <div class="col-md-3" 
                       v-for="board in boards" 
                       :key="board.id"
-                      @click="selectItem(board.id), selectBoard(board.id)"
+                      @click="selectItem(board.id), selectBoard(board)"
                     >
                       <div class="panel panel-default" :class="{highlight:board.id == selected}">
                         <div class="panel-heading board">{{board.name}}</div>
@@ -101,7 +101,7 @@
         
         <div class="shadow" style="border-width: 0.1em;"></div>
       </div>
-    </div></div><div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag.replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4><div v-for="suggestion in card.suggestions.data.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
+    </div></div><div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag.replace('{"').replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4><div v-for="suggestion in card.suggestions.data.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
   <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
 </div></div>
                       </div>
@@ -133,6 +133,7 @@ export default {
       selected: "",
       newCardName: "",
       selectedList: "",
+      selectedBoard: {},
       boardLists: [],
       lambdaCards: [],
       cards: [],
@@ -283,6 +284,11 @@ export default {
         this.lambdaCards = [];
         this.cards.forEach(element => {
           this.getLambdas(element.name, element.id);
+        });
+        this.$store.commit("addBoard", {
+          id: this.selectedBoard.id,
+          name: this.selectedBoard.name,
+          cards: this.lambdaCards
         });
       }
     },
