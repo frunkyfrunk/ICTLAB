@@ -7,12 +7,12 @@
     <div class="col-md-3" 
                       v-for="board in boards" 
                       :key="board.id"
+                      @click="viewBoard(board.id)"
                     >
                       <div class="panel panel-default" :class="{highlight:board.id == selected}">
                         <div class="panel-heading board">{{board.name}}</div>
                         <div class="panel-body">
-                          <h5>Last Activity</h5>
-                          {{board.dateLastActivity | lastDate}}
+                          <h5>{{board.cards.length + 1}} stories</h5>
                         </div>
                       </div>
                     </div>
@@ -28,6 +28,11 @@ export default {
     boards: function () {
       return this.$store.state.computedboards
     }
+  },
+  methods :{
+      viewBoard(id){
+          this.$router.push({ path: `/Stories/Board?id=${id}` }) 
+      }
   }
 }
 </script>

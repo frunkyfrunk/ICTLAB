@@ -75,16 +75,10 @@
                 </div>
                 <div v-if="step == 4" class="tab-pane active" role="tabpanel">
                   <h3>Results</h3>
-                  <div class="row">aaaaaaaaaaaaaaaaa
-
-
+                  <div class="row">
+<div class="col-md-12">
     <div class="result container">
-                        <div class="row">
-           <!--  <div class="col-md-6">
-               <div class="panel-heading board">
-                  <textarea readonly type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1"> Average userstories score</textarea>
-                </div>
-            </div> -->
+        <div class="row">
             <div class="col-md-6"> 
                <div id="specificChart" class="donut-size">
                   <div class="pie-wrapper">
@@ -126,19 +120,7 @@
                     </div>                    
                 </div>
                 <center><span>Your Average</span></center>
-              </div>
-
-<!--     <div class="col-md-12">
-      <h4>Tags</h4>
-      <span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag.replace('"}','').replace('.','')}}</span>
-    </div> -->
-<!--     <div class="col-md-12">
-      <h4>Penalties</h4>
-      <div v-for="suggestion in card.suggestions.data.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
-        <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
-      </div>
-  </div> -->
-                      </div>
+              </div></div></div>
         </div>
 
 
@@ -155,20 +137,22 @@
                         <div id="specificChart" class="donut-size">
       <div class="pie-wrapper">
         <span class="label">
-          <span class="num">{{card.suggestions.data.score}}</span><span class="smaller">%</span>
+          <span class="num">{{card.suggestions.score}}</span><span class="smaller">%</span>
         </span>
-        <div v-if="card.suggestions.data.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
-          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.data.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+        <div v-if="card.suggestions.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
           <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
         </div>
         <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
-          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.data.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
           <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
         </div>
         
         <div class="shadow" style="border-width: 0.1em;"></div>
       </div>
-    </div></div><div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags.data" :key="tag.id">{{tag.replace('{"').replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4><div v-for="suggestion in card.suggestions.data.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
+    </div></div>
+    <div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags" :key="tag.id">{{tag.replace('{"').replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4>
+    <div v-for="suggestion in card.suggestions.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
   <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
 </div></div>
                       </div>
@@ -383,7 +367,7 @@ export default {
 
       this.averageUserstoriesScore = averageUserstoriesScore;
     },
-    async getLambdas(cards, id) {
+    async getLambdas(cards) {
       var tags;
       var suggestions;
       var test = 0;
@@ -396,99 +380,36 @@ export default {
         type: "POST",
         url:
           "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
-        data: formattedcards,
-        async:false,
+        data: JSON.stringify(formattedcards),
+        async: false,
         success: function(response) {
           tags = response.data;
+          console.log(tags);
         }
       });
 
       $.ajax({
         type: "POST",
-        async:false,
         url:
           "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
-        data: formattedcards,
+        data: JSON.stringify(formattedcards),
+        async: false,
         success: function(response) {
           suggestions = response.data;
+          console.log(suggestions);
         }
       });
-      this.lambdaCards = tags.joinWith(suggestions);
-      /*this.lambdaCards.push({
-        id: id,
-        name: story,
-        suggestions: suggestions,
-        tags: tags
-      });*/
-
-      // console.log(this.totalBoardScore);
+      for (var i = 0; 1 < cards.length; i++) {
+        let card = cards[i];
+        this.lambdaCards.push({
+          id: card.id,
+          name: card.name,
+          suggestions: suggestions[i],
+          tags: tags[i]
+        });
+      }
+      console.log(this.lambdaCards);
     }
   }
 };
 </script>
-//getData(c) {
-    //   // GET /someUrl
-    //   $.ajax({
-    //     url:
-    //       "https://api.trello.com/1/boards/BwXA7ZZT/cards/all?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f",
-    //     method: "GET",
-    //     success: function(response) {
-    //       c(response.map(i => i.name));
-    //     }
-    //   });
-    // },
-// $self.getData(function(response) {
-    //   $self.stories = $self.getStories(response);
-    // });
-    // check(reason) {},
-    // ,
-    // parseStory(story) {
-    //   let sentences = story.split(",");
-    //   let role = "";
-    //   let goal = "";
-    //   let reason = "";
-    //   if (sentences.length > 2) {
-    //     return {
-    //       role: sentences[0].replace(/.*As a\s+|As an\s+(.*).*/i, "$1"),
-    //       goal: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
-    //       reason: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
-    //       full: story
-    //     };
-    //   } else {
-    //     return false;
-    //   }
-    // },
-    // getStories(stories) {
-    //   return stories.map(story => this.parseStory(story));
-    // }
-<!-- <div class="col-md-9">
-      <div class="form-group">
-      <div class="input-group">
-    <div class="input-group-prepend">
-        <span class="input-group-text">As a </span>
-    </div>
-     <input class="form-control col-md-6" v-model="story.role" placeholder="Role"/>
-    </div></div><div class="form-group">
-    <div class="input-group"><div class="input-group-prepend">
-        <span class="input-group-text">I </span>
-      
-    </div>
-     <select class="form-control col-md-2"><option>Want to</option>
-     <option>Would like to</option>
-     <option>Need to</option></select>
-     <input class="form-control col-md-9" v-model="story.goal" placeholder="Goal"/></div></div>
-     <div class="form-group">
-     <div class="input-group">
-    <div class="input-group-prepend">
-        <span class="input-group-text">so that I </span>
-        
-    </div>
-    <input v-model="story.reason" class="form-control col-md-8" placeholder="Reason"/></div></div>
-</div>
-<div class="col-md-3">
-  <button type="button" class="btn btn-primary btn-lg">Save story</button>
-</div> -->
-
-                      // :class="{highlight:card.id == selected, hover:card.id == hover}"
-                      // @click="selectItem(card.id)"
-                      // @mouseover="hoverItem(card.id)"

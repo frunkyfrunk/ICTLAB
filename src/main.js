@@ -16,12 +16,12 @@ Vue.config.productionTip = false
 
 const store = new Vuex.Store({
   state: {
-    computedboards: []
+    computedboards: {}
   },
   mutations: {
     addBoard(state, board) {
-      state.computedboards.push(board)
-    }
+      state.computedboards[board.id.toString()] = board
+    },
   }
 })
 

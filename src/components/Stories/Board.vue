@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="col-md-12">
-            <h2 class="text-center">Board</h2>
+            <h2 class="text-center">Board {{board.name}}</h2>
             <hr class="hidden-xs">
         </div>
     
@@ -11,8 +11,13 @@
 <script>
 export default {
     name: "Board",
-    mounted(){
-        alert(this.$route.query.id)
-    }
+    
+    computed:{
+        board: function () {
+        if(this.$route.query.id != null){
+            return this.$store.state.computedboards[this.$route.query.id]
+        }
+        }
+            }
 }
 </script>
