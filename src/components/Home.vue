@@ -197,9 +197,9 @@ export default {
   name: "Home",
   data() {
     return {
-      averageUserstoriesScore:0,
-      totalBoardScore:0,
-      totalBoardCards:0,
+      averageUserstoriesScore: 0,
+      totalBoardScore: 0,
+      totalBoardCards: 0,
 
       selected: "",
       newCardName: "",
@@ -354,10 +354,7 @@ export default {
       if (this.step == 4) {
         this.getAverageScoreLambda();
         this.lambdaCards = [];
-        this.cards.forEach(element => {
-          // console.log(element.name);
-          this.getLambdas(element.name, element.id);
-        });
+        this.getLambdas(this.cards);
         this.$store.commit("addBoard", {
           id: this.selectedBoard.id,
           name: this.selectedBoard.name,
@@ -372,8 +369,7 @@ export default {
       this.getAllCardsOfSingleBoard();
       this.getListsFromBoards();
     },
-    async getAverageScoreLambda(){
-      
+    async getAverageScoreLambda() {
       var averageUserstoriesScore;
 
       await axios
@@ -381,57 +377,51 @@ export default {
           "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage"
         )
         .then(function(response) {
-
           averageUserstoriesScore = response.data.data;
         })
         .catch(error => error);
 
-          this.averageUserstoriesScore = averageUserstoriesScore;
+      this.averageUserstoriesScore = averageUserstoriesScore;
     },
-    async getLambdas(story, id) {
+    async getLambdas(cards, id) {
       var tags;
       var suggestions;
       var test = 0;
       var totalBoardScore = 0;
-      await axios
-        .post(
+      var formattedcards = this.cards.map(card => {
+        return { story: card.name };
+      });
+
+      $.ajax({
+        type: "POST",
+        url:
           "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
-          {
-            body: story
-          }
-        )
-        .then(function(response) {
+        data: formattedcards,
+        async:false,
+        success: function(response) {
           tags = response.data;
-        })
-        .catch(error => error);
+        }
+      });
 
-      await axios
-        .post(
+      $.ajax({
+        type: "POST",
+        async:false,
+        url:
           "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
-          {
-            body: story
-          }
-        )
-        .then(function(response) {
-
-// test this
-// console.log(response.data.data.score);
-
-          // this.totalBoardScore += response.data.data.score);
-          
+        data: formattedcards,
+        success: function(response) {
           suggestions = response.data;
-        })
-        .catch(error => error);        
-
-      this.lambdaCards.push({
+        }
+      });
+      this.lambdaCards = tags.joinWith(suggestions);
+      /*this.lambdaCards.push({
         id: id,
         name: story,
         suggestions: suggestions,
         tags: tags
-      });
-    
-    // console.log(this.totalBoardScore);
-    
+      });*/
+
+      // console.log(this.totalBoardScore);
     }
   }
 };
