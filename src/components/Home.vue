@@ -105,14 +105,14 @@
                <div id="specificChart" class="donut-size">
                   <div class="pie-wrapper">
                     <span class="label">
-                      <span class="num">{{averageUserstoriesScore}}</span><span class="smaller">%</span>
+                      <span class="num">{{ownAverageUserstoriesScore}}</span><span class="smaller">%</span>
                     </span>
-                    <div v-if="averageUserstoriesScore < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
-                      <div :style="{ transform: 'rotate('+(360 * (averageUserstoriesScore / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                    <div v-if="ownAverageUserstoriesScore < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+                      <div :style="{ transform: 'rotate('+(360 * (ownAverageUserstoriesScore / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
                       <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
                     </div>
                     <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
-                      <div :style="{ transform: 'rotate('+(360 * (averageUserstoriesScore/ 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                      <div :style="{ transform: 'rotate('+(360 * (ownAverageUserstoriesScore/ 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
                       <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
                     </div>
         
@@ -182,8 +182,9 @@ export default {
   data() {
     return {
       averageUserstoriesScore: 0,
-      totalBoardScore: 0,
-      totalBoardCards: 0,
+      ownAverageUserstoriesScore: 0,
+      
+
 
       selected: "",
       newCardName: "",
@@ -368,6 +369,7 @@ export default {
       this.averageUserstoriesScore = averageUserstoriesScore;
     },
     async getLambdas(cards) {
+      var ownAverageUserstoriesScore = 0;      
       var tags;
       var suggestions;
       var test = 0;
@@ -396,9 +398,18 @@ export default {
         async: false,
         success: function(response) {
           suggestions = response.data;
+
+          ownAverageUserstoriesScore = response.averagescore;
+
+          // console.log(ownAverageUserstoriesScore);
           console.log(suggestions);
         }
       });
+
+      this.ownAverageUserstoriesScore = ownAverageUserstoriesScore;
+
+      console.log('USER SCORE: ' + this.ownAverageUserstoriesScore);
+      
       for (var i = 0; 1 < cards.length; i++) {
         let card = cards[i];
         this.lambdaCards.push({
@@ -408,6 +419,7 @@ export default {
           tags: tags[i]
         });
       }
+      
       console.log(this.lambdaCards);
     }
   }
