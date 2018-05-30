@@ -1,7 +1,7 @@
 {
-  "name": "story-analyzer",
+  "name": "mytrelloservice",
   "version": "1.0.0",
-  "description": "ICTLAB",
+  "description": "",
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.3",
-    "jsonwebtoken": "^8.2.0",
-    "mysql2": "^1.5.3",
-    "sequelize": "^4.37.4"
+    "compromise": "^11.8.0",
+    "request": "^2.85.0"
   }
 }
