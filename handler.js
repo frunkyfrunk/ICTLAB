@@ -1,7 +1,7 @@
 'use strict';
 const request = require('request');
-const nlp = require('compromise');
-const storyCalcutor = require('./services/storyCalculateService.js');
+const nlp = require('compromise')
+const StoryCalculatorService = require('./services/storyCalculateService.js');
 
 function saveStories(stories){
 
@@ -28,29 +28,12 @@ var ObjStories = JSON.parse(stories);
       console.log(body);
     });
   }
-
 }
-
-
-
-
-
-
-
-
 
 function calculateAverageScore(stories) {
 
   var totalscore = 0;
   var total = 0;
-
-  request.post({
-    url: 'https://unxe4qrdkk.execute-api.us-east-1.amazonaws.com/dev/stories',
-    body: storyName,
-    json: true
-  }, function(error, response, body){
-    console.log(body);
-  });
 
   for (var i in stories) {
 
@@ -78,7 +61,7 @@ module.exports.getScore = (event, context, callback) => {
     
     // console.log('Start logging words to calc method');
     // console.log(jsonData[i].story);
-    data.push(storyCalcutor.calculateScore(jsonData[i].story));
+    data.push(StoryCalculatorService.calculateScore(jsonData[i].story));
     // console.log(data);
   }
 
@@ -114,7 +97,7 @@ module.exports.getStoryCategories = (event, context, callback) => {
 
     for (var i in jsonData) {
     
-      data.push(storyCategories(jsonData[i].story));
+      data.push(StoryCalculatorService.storyCategories(jsonData[i].story));
       console.log(jsonData[i].story);
   }
 
@@ -156,38 +139,6 @@ module.exports.saveStories = (event, context, callback) => {
     callback(null,response);
 };
 
-
-
-
-
-
-
-
-
-module.exports.getAllStories = (event, context, callback) => {
-  //key = a9ce77430032f94b49e35446c5587c85
-  //token = 2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f
-  //usernameOrID = bennymohan
-  //https://api.trello.com/1/members/bennymohan/boards?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f
-  request.get('https://api.trello.com/1/boards/BwXA7ZZT/cards/all?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f', function (error, response, body) {
-    var data = [];
-    var hh = JSON.parse(body);
-    for (var i in hh) {
-      data.push('{"name" : '+ '"'+ hh[i].name+'"' + ', "id" : '+ '"'+ hh[i].id+'"}' );
-    }
-
-    response = {
-      statusCode: 200,
-      body: JSON.stringify({
-       data
-      }),
-    };
-    console.log(body);
-    callback(null,response);
-  });
-};
-
-
 module.exports.getAllcardsAverage = (event, context, callback) => {
   
   request.get('https://api.trello.com/1/members/me/cards?filter=all&key=32e0f2d3d2fc039ebace2c6d393b474d&token=0f4c965e894ab5c745329eb60fbe9bab9c132505efc64a7b51029cb483b75066', function (error, response, body) {
@@ -200,7 +151,7 @@ module.exports.getAllcardsAverage = (event, context, callback) => {
 
       totalCards++;
       
-      var cardScore = storyCalcutor.calculateScore(myData[i].name).score;
+      var cardScore = StoryCalculatorService.calculateScore(myData[i].name).score;
 
       totalScore += cardScore;
     }
