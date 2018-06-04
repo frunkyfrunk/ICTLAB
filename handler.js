@@ -236,7 +236,7 @@ module.exports.saveStories = (event, context, callback) => {
 
   console.log(jsonData)
   
-  saveStories(event.body)
+  saveStories(event.body);
 
   const response = {
       statusCode: 200,
