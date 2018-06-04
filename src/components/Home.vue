@@ -390,6 +390,17 @@ export default {
         }
       });
 
+    // Add stories to database
+      $.ajax({
+        type: "POST",
+        url:
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/saveStories",
+        data: JSON.stringify(formattedcards),
+        async: false,
+        success: function(response) {
+        }
+      });
+
       $.ajax({
         type: "POST",
         url:
