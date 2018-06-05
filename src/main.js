@@ -4,19 +4,32 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import jQuery from 'jquery'
+import Vuex from 'vuex'
 global.jQuery = jQuery
 let Bootstrap = require('bootstrap')
 import '../src/css/bootstrap.min.css'
 import '../src/css/main.css'
 import Swal from 'sweetalert2'
-
+Vue.use(Vuex)
 
 Vue.config.productionTip = false
+
+const store = new Vuex.Store({
+  state: {
+    computedboards: {}
+  },
+  mutations: {
+    addBoard(state, board) {
+      state.computedboards[board.id.toString()] = board
+    },
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store:store,
   components: { App },
   template: '<App/>'
 })
