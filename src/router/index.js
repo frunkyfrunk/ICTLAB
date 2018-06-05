@@ -3,8 +3,6 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Stories from '@/components/Stories'
 import Projects from '@/components/Projects'
-import Board from '@/components/Stories/Board'
-
 import jQuery from 'jquery'
 global.jQuery = jQuery
 window.$ = jQuery;
@@ -27,11 +25,6 @@ export default new Router({
       path: '/Projects',
       name: 'Projects',
       component: Projects
-    },
-    {
-      path: '/Stories/Board',
-      name: 'Board',
-      component: Board
     }
   ]
 })
