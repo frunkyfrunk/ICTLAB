@@ -28,7 +28,7 @@
                     <div class="col-md-3" 
                       v-for="board in boards" 
                       :key="board.id"
-                      @click="selectItem(board.id), selectBoard(board.id)"
+                      @click="selectItem(board.id), selectBoard(board)"
                     >
                       <div class="panel panel-default" :class="{highlight:board.id == selected}">
                         <div class="panel-heading board">{{board.name}}</div>
@@ -74,15 +74,98 @@
                   </div>             
                 </div>
                 <div v-if="step == 4" class="tab-pane active" role="tabpanel">
-                  <h3>Step {{step}}</h3>
-                  <p>This is step {{step}}</p>
+                  <h3>Results</h3>
+                  <div class="row">
+<div class="col-md-12">
+    <div class="result container">
+        <div class="row">
+            <div class="col-md-6"> 
+               <div id="specificChart" class="donut-size">
+                  <div class="pie-wrapper">
+                    <span class="label">
+                      <span class="num">{{averageUserstoriesScore}}</span><span class="smaller">%</span>
+                    </span>
+                    <div v-if="averageUserstoriesScore < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+                      <div :style="{ transform: 'rotate('+(360 * (averageUserstoriesScore / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                      <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+                    </div>
+                    <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
+                      <div :style="{ transform: 'rotate('+(360 * (averageUserstoriesScore/ 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                      <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+                    </div>
+        
+                    <div class="shadow" style="border-width: 0.1em;"></div>
+                    </div>                    
+                </div>
+                <center><span>Users Average</span></center>
+              </div>
+
+
+      <div class="col-md-6"> 
+               <div id="specificChart" class="donut-size">
+                  <div class="pie-wrapper">
+                    <span class="label">
+                      <span class="num">{{ownAverageUserstoriesScore}}</span><span class="smaller">%</span>
+                    </span>
+                    <div v-if="ownAverageUserstoriesScore < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+                      <div :style="{ transform: 'rotate('+(360 * (ownAverageUserstoriesScore / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                      <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+                    </div>
+                    <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
+                      <div :style="{ transform: 'rotate('+(360 * (ownAverageUserstoriesScore/ 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                      <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+                    </div>
+        
+                    <div class="shadow" style="border-width: 0.1em;"></div>
+                    </div>                    
+                </div>
+                <center><span>Your Average</span></center>
+              </div></div></div>
+        </div>
+
+
+
+                  <div class="col-md-12" v-for="card in lambdaCards" 
+                      :key="card.id" 
+                    >
+                      <div class="result container">
+                        <div class="row">
+            <div class="col-md-6">
+                        <div class="panel-heading board">
+                          <textarea readonly type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></textarea>
+                        </div></div><div class="col-md-6"> 
+                        <div id="specificChart" class="donut-size">
+      <div class="pie-wrapper">
+        <span class="label">
+          <span class="num">{{card.suggestions.score}}</span><span class="smaller">%</span>
+        </span>
+        <div v-if="card.suggestions.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+          <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+        </div>
+        <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
+          <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+          <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
+        </div>
+        
+        <div class="shadow" style="border-width: 0.1em;"></div>
+      </div>
+    </div></div>
+    <div class="col-md-12"><h4>Tags</h4><span class="badge badge-info" v-for="tag in card.tags" :key="tag.id">{{tag.replace('{"').replace('"}','').replace('.','')}}</span></div><div class="col-md-12"><h4>Penalties</h4>
+    <div v-for="suggestion in card.suggestions.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
+  <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
+</div></div>
+                      </div>
+        </div>
+                    </div>
+                </div>
                 </div>
                 <div v-if="step == 1" class="float-right">
                   <button @click="authenticate()" id="loginButton" type="button" class="btn btn-primary">Log in</button>
                 </div>
                 <div class="float-right">
                  <button type="button" class="btn btn-default prev-step" v-if="step > 2" v-on:click="step -= 1" >Previous</button>
-                 <button type="button" class="btn btn-primary next-step" v-if="step < 3 && step > 1" v-on:click="nextstep()" >Next</button>
+                 <button type="button" class="btn btn-primary next-step" v-if="step < 4 && step > 1" v-on:click="nextstep()" >Next</button>
                 </div>
               </div>
             </div>
@@ -93,14 +176,22 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "Home",
   data() {
     return {
-      selected: "", 
-      newCardName:"",
-      selectedList:"",
+      averageUserstoriesScore: 0,
+      ownAverageUserstoriesScore: 0,
+      
+
+
+      selected: "",
+      newCardName: "",
+      selectedList: "",
+      selectedBoard: {},
       boardLists: [],
+      lambdaCards: [],
       cards: [],
       boards: [],
       step: 1,
@@ -111,9 +202,6 @@ export default {
         { id: 4, icon: "fas fa-cloud-upload-alt" }
       ]
     };
-  },
-  mounted() {
-    //let $self = this;
   },
   filters: {
     lastDate(date) {
@@ -127,29 +215,29 @@ export default {
     selectItem(e) {
       this.selected = e;
     },
-    selectBoard(e){
+    selectBoard(e) {
       this.selectedBoard = e;
     },
-    addCard(){
+    addCard() {
       Trello.post(
         "/cards",
         {
-          idList:this.selectedList,
-          name:this.newCardName
+          idList: this.selectedList,
+          name: this.newCardName
         },
-        (result) => {
+        result => {
           //success
           alert("Added");
           this.refreshData();
         },
-        (result) => {
+        result => {
           //error
           alert("Add failed");
           console.log(result);
         }
-      )
+      );
     },
-    updateCard(id, text){
+    updateCard(id, text) {
       Trello.put(
         "/cards/" + id,
         { name: text },
@@ -164,20 +252,20 @@ export default {
         }
       );
     },
-    deleteCard(id){
+    deleteCard(id) {
       Trello.delete(
         "/cards/" + id,
-        (result) => {
+        result => {
           //success
           alert("Deleted");
           this.refreshData();
         },
-        (result) => {
+        result => {
           //error
           alert("Delete Failed");
           console.log(result);
         }
-      )
+      );
     },
     getAllCardsOfSingleBoard() {
       this.cards = "";
@@ -194,21 +282,21 @@ export default {
         }
       );
     },
-    getListsFromBoards(){
+    getListsFromBoards() {
       var id = this.selected;
       Trello.boards.get(
         id + "/lists/",
-        (result) => {
+        result => {
           //success
           this.boardLists = result;
         },
-        (result) => {
+        result => {
           //error
           alert(result);
         }
-      )
+      );
     },
-    getAllBoards(){
+    getAllBoards() {
       Trello.members.get(
         "me/boards",
         result => {
@@ -245,83 +333,106 @@ export default {
     },
     nextstep() {
       this.step++;
-      if(this.step == 3){
+      if (this.step == 3) {
         this.refreshData();
+      }
+      if (this.step == 4) {
+        this.getAverageScoreLambda();
+        this.lambdaCards = [];
+        this.getLambdas(this.cards);
+        this.$store.commit("addBoard", {
+          id: this.selectedBoard.id,
+          name: this.selectedBoard.name,
+          cards: this.lambdaCards
+        });
       }
     },
     previousstep() {
       this.step--;
     },
-    refreshData(){
+    refreshData() {
       this.getAllCardsOfSingleBoard();
       this.getListsFromBoards();
+    },
+    async getAverageScoreLambda() {
+      var averageUserstoriesScore;
+
+      await axios
+        .get(
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage"
+        )
+        .then(function(response) {
+          averageUserstoriesScore = response.data.data;
+        })
+        .catch(error => error);
+
+      this.averageUserstoriesScore = averageUserstoriesScore;
+    },
+    async getLambdas(cards) {
+      var ownAverageUserstoriesScore = 0;      
+      var tags;
+      var suggestions;
+      var test = 0;
+      var totalBoardScore = 0;
+      var formattedcards = this.cards.map(card => {
+        return { story: card.name };
+      });
+
+      $.ajax({
+        type: "POST",
+        url:
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
+        data: JSON.stringify(formattedcards),
+        async: false,
+        success: function(response) {
+          tags = response.data;
+          console.log(tags);
+        }
+      });
+
+    // Add stories to database
+      $.ajax({
+        type: "POST",
+        url:
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/saveStories",
+        data: JSON.stringify(formattedcards),
+        async: false,
+        success: function(response) {
+        }
+      });
+
+      $.ajax({
+        type: "POST",
+        url:
+          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
+        data: JSON.stringify(formattedcards),
+        async: false,
+        success: function(response) {
+          suggestions = response.data;
+
+          ownAverageUserstoriesScore = response.averagescore;
+
+          // console.log(ownAverageUserstoriesScore);
+          console.log(suggestions);
+        }
+      });
+
+      this.ownAverageUserstoriesScore = ownAverageUserstoriesScore;
+
+      console.log('USER SCORE: ' + this.ownAverageUserstoriesScore);
+      
+      for (var i = 0; 1 < cards.length; i++) {
+        let card = cards[i];
+        this.lambdaCards.push({
+          id: card.id,
+          name: card.name,
+          suggestions: suggestions[i],
+          tags: tags[i]
+        });
+      }
+      
+      console.log(this.lambdaCards);
     }
   }
 };
 </script>
-//getData(c) {
-    //   // GET /someUrl
-    //   $.ajax({
-    //     url:
-    //       "https://api.trello.com/1/boards/BwXA7ZZT/cards/all?key=a9ce77430032f94b49e35446c5587c85&token=2ba1977dfaf9099a0c5a85ea7226437d9295bc190e5d8644a25927a749bd414f",
-    //     method: "GET",
-    //     success: function(response) {
-    //       c(response.map(i => i.name));
-    //     }
-    //   });
-    // },
-// $self.getData(function(response) {
-    //   $self.stories = $self.getStories(response);
-    // });
-    // check(reason) {},
-    // ,
-    // parseStory(story) {
-    //   let sentences = story.split(",");
-    //   let role = "";
-    //   let goal = "";
-    //   let reason = "";
-    //   if (sentences.length > 2) {
-    //     return {
-    //       role: sentences[0].replace(/.*As a\s+|As an\s+(.*).*/i, "$1"),
-    //       goal: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
-    //       reason: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
-    //       full: story
-    //     };
-    //   } else {
-    //     return false;
-    //   }
-    // },
-    // getStories(stories) {
-    //   return stories.map(story => this.parseStory(story));
-    // }
-<!-- <div class="col-md-9">
-      <div class="form-group">
-      <div class="input-group">
-    <div class="input-group-prepend">
-        <span class="input-group-text">As a </span>
-    </div>
-     <input class="form-control col-md-6" v-model="story.role" placeholder="Role"/>
-    </div></div><div class="form-group">
-    <div class="input-group"><div class="input-group-prepend">
-        <span class="input-group-text">I </span>
-      
-    </div>
-     <select class="form-control col-md-2"><option>Want to</option>
-     <option>Would like to</option>
-     <option>Need to</option></select>
-     <input class="form-control col-md-9" v-model="story.goal" placeholder="Goal"/></div></div>
-     <div class="form-group">
-     <div class="input-group">
-    <div class="input-group-prepend">
-        <span class="input-group-text">so that I </span>
-        
-    </div>
-    <input v-model="story.reason" class="form-control col-md-8" placeholder="Reason"/></div></div>
-</div>
-<div class="col-md-3">
-  <button type="button" class="btn btn-primary btn-lg">Save story</button>
-</div> -->
-
-                      // :class="{highlight:card.id == selected, hover:card.id == hover}"
-                      // @click="selectItem(card.id)"
-                      // @mouseover="hoverItem(card.id)"
