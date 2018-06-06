@@ -2,7 +2,7 @@
 const request = require('request');
 const nlp = require('compromise');
 
-class StoryCalculatorService{
+class StoryCalculatorService {
     calculateScore(story) {
         let suggestions = []
         let doc = nlp(story)

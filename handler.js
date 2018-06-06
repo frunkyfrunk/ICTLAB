@@ -2,33 +2,15 @@
 const request = require('request');
 const nlp = require('compromise')
 const StoryCalculatorService = require('./services/storyCalculateService.js');
+const StoryService = require('./services/storyService.js');
 
-function saveStories(stories){
+const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-  console.log('START LOGGIN DB CONNECTIONS!');
-  //  console.log(stories);
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const params = {
+  TableName: process.env.DYNAMODB_TABLE,
+};
 
-var ObjStories = JSON.parse(stories);
-
-  for(var index in ObjStories) {
-    var data = [];
-    var storyName = ObjStories[index];
-    // var score = stories[index].score;
-    data.push(ObjStories);
-
-    console.log('DEBUG STORY NAME');
-    console.log(storyName);
-    data.push(100);
-    // var json_story = JSON.parse(data);
-    request.post({
-      url: 'https://unxe4qrdkk.execute-api.us-east-1.amazonaws.com/dev/stories',
-      body: storyName,
-      json: true
-    }, function(error, response, body){
-      console.log(body);
-    });
-  }
-}
 
 function calculateAverageScore(stories) {
 
@@ -124,7 +106,7 @@ module.exports.saveStories = (event, context, callback) => {
 
   console.log(jsonData)
   
-  saveStories(event.body);
+  StoryService.saveStories(event.body);
 
   const response = {
       statusCode: 200,
@@ -139,11 +121,59 @@ module.exports.saveStories = (event, context, callback) => {
     callback(null,response);
 };
 
+
+module.exports.getStories = (event, context, callback) => {
+  // fetch all stories from the database
+  dynamoDb.scan(params, (error, result) => {
+    // handle potential errors
+    if (error) {
+      console.error(error);
+      callback(null, {
+        statusCode: error.statusCode || 501,
+        headers: { 'Content-Type': 'text/plain' },
+        body: 'Couldn\'t fetch the stories.',
+      });
+      return;
+    }
+
+    // create a response
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(result.Items),
+    };
+    callback(null, response);
+  });
+};
+
+
 module.exports.getAllcardsAverage = (event, context, callback) => {
   
+  var dbStories;
+
+  dynamoDb.scan(params, (error, result) => {
+
+  dbStories = result.Items;
+
+  console.log('DBSTORIES DEBUG');
+  console.log(dbStories);
+
+  // StoryCalculatorService.calculateScore(myData[i].story);
+  //   // create a response
+  //   const response = {
+  //     statusCode: 200,
+  //     body: JSON.stringify(result.Items),
+  //   };
+  //   callback(null, response);
+  });
+
+  
+
+// need to return data, need to give data correctly to forloop
+
   request.get('https://api.trello.com/1/members/me/cards?filter=all&key=32e0f2d3d2fc039ebace2c6d393b474d&token=0f4c965e894ab5c745329eb60fbe9bab9c132505efc64a7b51029cb483b75066', function (error, response, body) {
      
-    var myData = JSON.parse(body);
+    // var myData = JSON.parse(dbStories)
+    var myData = dbStories;
     var totalScore = 0;
     var totalCards = 0;
 
@@ -151,11 +181,16 @@ module.exports.getAllcardsAverage = (event, context, callback) => {
 
       totalCards++;
       
-      var cardScore = StoryCalculatorService.calculateScore(myData[i].name).score;
+      var cardScore = myData[i].score;
+
+      console.log('mydata[i] object');
+      console.log(cardScore);
 
       totalScore += cardScore;
     }
 
+    console.log('TOTAL SCORE');
+    console.log(totalScore);
     var data = Math.round(totalScore / totalCards);
 
     response = {
