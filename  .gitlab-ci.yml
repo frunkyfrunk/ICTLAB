@@ -1,0 +1,23 @@
+build site:
+  image: node:6
+  stage: build
+  script:
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+## Deployment - Production
+deploy:
+  image: napp/docker-aws-cli
+  stage: deploy
+  when: manual
+  script:
+  - aws s3 cp --recursive ./dist/. s3://$AWS_BUCKET
+  environment:
+    name: production
+    url: https://myapp.com
+  only:
+  - frontend
