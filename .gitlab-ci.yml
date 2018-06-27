@@ -2,8 +2,6 @@ build site:
   image: node:10
   stage: build
   script:
-    - npm config set registry "http://registry.npmjs.org/"
-    - npm cache clean
     - npm install
     - npm run build
   artifacts:
