@@ -2,7 +2,9 @@ build site:
   image: node:10
   stage: build
   script:
-    - apt-get install build-essential
+    - apt-get update
+    - apt-get install python2.7 python-pip
+    - apt-get install make
     - npm install --no-progress
     - npm run build
   artifacts:
