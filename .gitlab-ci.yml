@@ -20,4 +20,4 @@ deploy:
     name: production
     url: https://myapp.com
   only:
-  - frontend
+  - master
