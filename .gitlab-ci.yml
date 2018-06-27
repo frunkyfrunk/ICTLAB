@@ -2,7 +2,7 @@ build site:
   image: node:10
   stage: build
   script:
-    - apt-get install libkrb5-dev
+    - apt-get install build-essential
     - npm install --no-progress
     - npm run build
   artifacts:
