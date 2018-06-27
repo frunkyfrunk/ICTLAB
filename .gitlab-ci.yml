@@ -6,7 +6,7 @@ build site:
     - apt-get update
     - apt-get -y install python2.7 python-pip
     - apt-get -y install make
-    - npm install --force--no-progress
+    - npm install --no-build--no-progress
     - npm run build
   artifacts:
     expire_in: 1 week
