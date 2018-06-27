@@ -359,7 +359,7 @@ export default {
 
       await axios
         .get(
-          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage"
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/getAllcardsAverage"
         )
         .then(function(response) {
           averageUserstoriesScore = response.data.data;
@@ -381,7 +381,7 @@ export default {
       $.ajax({
         type: "POST",
         url:
-          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/getStoryCategories",
         data: JSON.stringify(formattedcards),
         async: false,
         success: function(response) {
@@ -394,7 +394,7 @@ export default {
       $.ajax({
         type: "POST",
         url:
-          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/saveStories",
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/saveStories",
         data: JSON.stringify(formattedcards),
         async: false,
         success: function(response) {
@@ -404,7 +404,7 @@ export default {
       $.ajax({
         type: "POST",
         url:
-          "https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/getScore",
         data: JSON.stringify(formattedcards),
         async: false,
         success: function(response) {
