@@ -1,0 +1,6 @@
+{
+    "host": "ictlab.cjleux6nbzpd.us-east-1.rds.amazonaws.com",
+    "user": "root",
+    "password": "Abc1234567",
+    "database": "ictlab"
+}
