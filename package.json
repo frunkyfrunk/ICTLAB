@@ -4,7 +4,8 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-init": "jasmine init",
+    "test": "jasmine"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,8 @@
     "request": "^2.85.0"
   },
   "devDependencies": {
-    "compromise": "^11.11.0"
+    "compromise": "^11.11.0",
+    "jasmine": "^3.1.0",
+    "mocha": "^5.0.4"
   }
 }
