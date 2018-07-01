@@ -1,7 +1,52 @@
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900|Oswald);
 
+
+.wizardAnimation{
+   animation-name: move-wizard;
+   animation-duration: 1s;
+   animation-fill-mode: forwards;
+   /* position :relative; */
+}
+
+@keyframes move-wizard {
+  from {
+    margin-top: 20%;
+  }
+  to {
+    margin-top: 0px;
+  }
+}
+
+.board {
+  background-color:black;
+  color:white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.center {
+  margin-top:5%;
+  margin-bottom:3%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .panel.panel-default:hover{
-  background-color: #f2dede;
   cursor:pointer;
 }
 .result{
@@ -139,7 +184,7 @@
   padding: 15px;
 }
 .wizard {
-  margin: 20px auto;
+  margin-top: 20%;
   background: #fff;
 }
 .wizard .nav-tabs {

@@ -9,8 +9,10 @@ global.jQuery = jQuery
 let Bootstrap = require('bootstrap')
 import '../src/css/bootstrap.min.css'
 import '../src/css/main.css'
-import Swal from 'sweetalert2'
+import swalPlugin from '../src/js/sweet-alert-plugin.js';
+
 Vue.use(Vuex)
+Vue.use(swalPlugin)
 
 Vue.config.productionTip = false
 

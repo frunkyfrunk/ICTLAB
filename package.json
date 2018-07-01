@@ -18,6 +18,7 @@
     "jquery": "^3.3.1",
     "lapack": "^0.1.0",
     "natural": "^0.5.6",
+    "npm": "^6.1.0",
     "popper.js": "^1.14.1",
     "request": "^2.85.0",
     "sweetalert2": "^7.20.1",
