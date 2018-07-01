@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     getAllProjectsData() {
-        axios.get('https://cd5zq44552.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/allProjects/api').then(
+        axios.get('https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/allProjects/api').then(
             response => {this.stories = response.data.data}
         );
     }
