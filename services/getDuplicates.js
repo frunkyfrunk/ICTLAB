@@ -25,6 +25,22 @@ function parseStory(story){
 }
 // console.log(parseStory("As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant."))
 
+function checkMinimal(story){
+    var minimal = {
+        isMinimal:"",
+        minimalArray:[]
+    }
+    var isMinimal;
+    var minimalArray = [];
+    //var res = story.match(/[.*+?^${}()[\]\\]/g, '\\$&');
+    var filter = (/[.*+?^${}()[\]\\]/g, '\\$&')
+    // var res = nlp(story).match(filter).out('offset');
+    var res = nlp(story).match('mainly').out('text')
+    var res2 = nlp(story).has('mainly')
+    return res
+}
+console.log(checkMinimal("The rain in SPAIN stays [mainly] in the plain"));
+
 function checkAtomic(story){
     var atomic = {
         isAtomic: "",
@@ -54,12 +70,12 @@ function checkAtomic(story){
     }else {
         atomic.isAtomic = false
     }
-
     return atomic;
 }
-console.log(checkAtomic("I am winning and I am faster, while being taller and stronger & live to the fullest + win"))
-console.log(checkAtomic("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))
-console.log(checkAtomic("Hello world"))
+
+// console.log(checkAtomic("I am winning and I am faster, while being taller and stronger & live to the fullest + win"))
+// console.log(checkAtomic("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))
+// console.log(checkAtomic("Hello world"))
 
 function calculateCosineDistance(story1, story2) {
     var sentence1 = story1.replace(/,/g, '').split(' ')
