@@ -49,10 +49,10 @@
   </div>    
 </template>
 <script>
-import stepone from "./wizard/stepone.vue"
-import steptwo from "./wizard/steptwo.vue"
-import stepthree from "./wizard/stepthree.vue"
-import stepfour from "./wizard/stepfour.vue"
+import stepone from "./wizard/stepOne.vue"
+import steptwo from "./wizard/stepTwo.vue"
+import stepthree from "./wizard/stepThree.vue"
+import stepfour from "./wizard/stepFour.vue"
 export default {
   name: "Wizard",
   components: {
