@@ -89,6 +89,30 @@ class StoryCalculatorService {
         let doc = nlp(story)
         return doc.match("#Singular").match("!#Pronoun").out('array')
     }
+
+    storyFeedback() {
+
+      const sp = require('wordsworth').getInstance();
+
+      console.log('working on it!!');
+
+    var data;
+
+      sp.initialize(
+
+        './data/seed.txt',
+        './data/training.txt', function() {
+      
+          data = sp.analyze('This sentense will havv a fiw speling errorrs.');
+        }
+      );
+
+      return data;
+
+
+
+      
+  };
     
 }
 

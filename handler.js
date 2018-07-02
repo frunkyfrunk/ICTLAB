@@ -3,12 +3,14 @@ const request = require('request');
 const nlp = require('compromise')
 const StoryCalculatorService = require('./services/storyCalculateService.js');
 const StoryService = require('./services/storyService.js');
+const sp = require('wordsworth').getInstance();
+
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const params = {
-  TableName: process.env.DYNAMODB_TABLE,
+ TableName: process.env.DYNAMODB_TABLE,
 };
 
 
@@ -29,6 +31,9 @@ function calculateAverageScore(stories) {
 
 module.exports.getScore = (event, context, callback) => {
   
+  console.log('CALL STORYFEEDBACK METHOD');
+  // console.log(StoryCalculatorService.storyFeedback());
+
   // const data = calculateScore(event.body);
   var dummyData  = '[{"story":"Ford"}, {"story":"BMW"}]';
   var jsonData = JSON.parse(event.body);
@@ -37,6 +42,7 @@ module.exports.getScore = (event, context, callback) => {
   // console.log('LOG STRING: ' + event.body);
   // console.log('start loggin BODY propety');
   // console.log(event.body);
+  
   
 
   for (var i in jsonData) {
@@ -144,7 +150,6 @@ module.exports.getStories = (event, context, callback) => {
     callback(null, response);
   });
 };
-
 
 module.exports.getAllcardsAverage = (event, context, callback) => {
   

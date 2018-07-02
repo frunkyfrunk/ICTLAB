@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "compromise": "^11.8.0",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "spelling": "^2.0.1",
+    "wordsworth": "^0.1.0"
   }
 }
