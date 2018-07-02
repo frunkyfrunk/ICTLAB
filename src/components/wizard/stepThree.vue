@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-warning" @click="calculateScore()">Calculate Score</button>
         </div>
         <card-modal v-if="cardModal" @close="cardModal = false" :modalInfo="modalInfo" :currentCard="currentCard" v-on:update="refreshData()"></card-modal>
-        <div class="col-md-4" v-for="card in cards" :key="card.id">
+        <div class="col-md-12" v-for="card in cards" :key="card.id">
             <div class="storycard" @click="cardModal = true,  currentCard = card">
                 <div class="storycard-text">
                     <p>{{card.name}}</p>
@@ -111,10 +111,7 @@ export default {
 
 .storycard {
   height:100%;
-  border: 10px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  padding:10px;
 }
 
 .storycard-text:hover{
