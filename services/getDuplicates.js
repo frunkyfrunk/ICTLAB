@@ -5,21 +5,25 @@ const nlp = require('compromise');
 function stripStory(story) {
     var doc = nlp(story)
     return story
+}
+
+function parseStory(story){
     var sentences = story.split(",");
     role = "";
-    goal = "";
-    reason = "";
+    mean = "";
+    end = "";
     if (sentences.length > 2) {
         return {
-            role: sentences[0].replace(/.*As a\s+|As an\s+(.*).*/i, "$1"),
-            goal: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
-            reason: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
+            role: sentences[0].split(/.*As a\s+|As an\s+(.*).*/i)[2].split(/.*I [a-z]* ([a-z])* ?to+/i),
+            mean: sentences[1].replace(/.*I [a-z]* ([a-z])* ?to+/i, ""),
+            end: sentences[2].replace(/.*so that|so\s+(.*).*/i, "$1"),
             full: story
         };
     } else {
         return false
     }
 }
+console.log(parseStory("As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant."))
 
 function calculateCosineDistance(story1, story2) {
     var sentence1 = story1.replace(/,/g, '').split(' ')
@@ -87,4 +91,4 @@ function mainloop(stories) {
     }
     return matrix;
 }
-console.log(mainloop(["test je dingen","check je dingen","doe je dingen"]))
+//console.log(mainloop(["As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant.","check je dingen","doe je dingen"]))
