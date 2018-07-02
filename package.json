@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "wordsworth": "^0.1.0"
   },
   "devDependencies": {
     "compromise": "^11.11.0",
