@@ -13,3 +13,7 @@ function checkMinimal(story){
     return res
 }
 console.log(checkMinimal("The rain in SPAIN stays [mainly] in the plain"));
+
+module.exports = function (story) {
+    return checkMinimal(story)
+};

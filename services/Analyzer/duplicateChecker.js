@@ -50,10 +50,6 @@ function AddStoryToMatrix(story, stories) {
     }
 }
 
-function getCosineDistance(story1, story2) {
-    return stories[story1][story2];
-}
-
 function mainloop(stories) {
     let matrix = {};
     for (var i in stories) {

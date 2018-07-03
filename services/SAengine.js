@@ -1,10 +1,10 @@
-const analyzing = require("./Analyzer/analyzer.js")
+const analyzer = require("./Analyzer/analyzer.js")
 const scoring = 0;
-const suggestioning = 0;
+const suggestioning = require("./getSuggestions.js");
 
 const USERSTORY = "";
 
-function main(story){
+function getStory(story){
     var analyzerResult;
     var scoreResult;
     var suggestionsResult;
@@ -18,14 +18,26 @@ function main(story){
 
     //check if result is not undefined
     if(analyzerResult != undefined){
-        scoreResult = scoring(analyzerResult)
+        //scoreResult = scoring(analyzerResult)
         suggestionsResult = suggestioning(analyzerResult)
     }
 
     var totalResult = {
+        analyzed: analyzerResult,
         score: scoreResult,
-        suggestions: suggestionResult
+        suggestions: suggestionsResult
     }
 
     return totalResult
 };
+
+function main(arg){
+    if(Array.isArray(arg)){
+        
+    } else if(typeof arg === 'string') {
+        getStory(arg)
+    } else {
+        result = "Unknown user story type. please provide an array with strings or a single string."
+    }
+}
+console.log(main("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))

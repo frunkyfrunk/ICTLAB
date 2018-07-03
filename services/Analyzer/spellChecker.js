@@ -10,6 +10,10 @@ async function checkSpelling(story){
     );
 }
 
-checkSpelling("hellow mai namuh isuh mert and what is yours?");
-checkSpelling("Gawd bless murica if you know what i am sayink?");
-checkSpelling("it iz all oveer teh bills are nott paidd")
+//checkSpelling("hellow mai namuh isuh mert and what is yours?");
+//checkSpelling("Gawd bless murica if you know what i am sayink?");
+//checkSpelling("it iz all oveer teh bills are nott paidd")
+
+module.exports = function (story) {
+    return checkSpelling(story)
+};
