@@ -13,40 +13,49 @@ function checkForm(story) {
     return result
 }
 
-function checkRole(story){
-   //var text = story.split(/.*As a\s+|As an\s+(.*).*,\s+/i)[2])
-    var text = nlp(story).match("As a #Noun").out()
-    if(text != undefined)
+function checkRole(story) {
+    var containsformat = story.split(/.*As a\s+|As an\s+(.*).*,\s+/i);
+    var text = undefined;
+    if (containsformat.length > 1) {
+        text = containsformat[2].split(/,| I /i)[0]
+    }
+    if (text != undefined)
         return text
-    else{
+    else {
         return "Missing"
     }
 }
 
-function checkMean(story){
-    var text = story.split(/.*I (would like|need|want|have)* ?\s+(.*).*so that|so\s+/i)[2]
-    if(text != undefined)
+function checkMean(story) {
+    var text;
+    story = story.replace(' to ',' ')
+    if (story.match(/.*so that|so\s+(.*).*/i))
+        text = story.split(/.*I (would like|need|want|have)* ?\s+(.*).*(so that|so)\s+/i)[2]
+    else
+        text = story.split(/.*I (would like|need|want|have)* ?\s+(.*).*/i)[2]
+    if (text != undefined)
         return text
-    else{
+    else {
         return "Missing"
     }
 }
 
-function checkEnd(story){
+function checkEnd(story) {
     var text = story.split(/.*so that|so\s+(.*).*/i)[2]
-    if(text != undefined)
+    if (text != undefined)
         return text
-    else{
+    else {
         return "Missing"
     }
 }
 
-function checkAll(form){
-    if(form.role != "Missing" && form.mean != "Missing" && form.end != "Missing")
+function checkAll(form) {
+    if (form.role != "Missing" && form.mean != "Missing" && form.end != "Missing")
         return true
-    else{
+    else {
         return false
     }
 }
-//console.log(checkForm("As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant."))
-console.log(checkForm("I want to see an error when I cannot see recommendations after I upload an article"))
+module.exports = function (story) {
+    return checkForm(story)
+};

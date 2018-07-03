@@ -25,7 +25,6 @@ class StoryCalculatorService {
       nounscore: analyzed.nouns > 3 ? 10 - analyzed.nouns : 10,
       adjectivescore: analyzed.adjectives > 3 ? 10 - analyzed.adjectives : 10,
       adverbscore: analyzed.adverbs > 2 ? 10 - analyzed.adverbs : 10,
-
     }
   }
 

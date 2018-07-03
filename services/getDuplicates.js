@@ -9,7 +9,7 @@ function stripStory(story) {
 
 function parseStory(story) {
   return {
-    role: story.split(/.*As a\s+|As an\s+(.*).*,\s+/i)[2].split(",")[0],
+    role: story.split(/.*As a\s+|As an\s+(.*).*,\s+/i)[2].split(/,| I /i)[0],
     mean: story.split(/.*I (would like|need|want|have)* ?\s+(.*).*so that|so\s+/i)[2].replace('to',''),
     end: story.split(/.*so that|so\s+(.*).*/i)[2],
     full: story

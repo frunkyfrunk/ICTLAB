@@ -1,6 +1,6 @@
 const nlp = require('compromise')
 const atomicChecker = require('./atomicChecker.js')
-// const formChecker;
+const formChecker = require('./formChecker.js');
 // const minimalChecker;
 // const spellChecker;
 
@@ -9,7 +9,6 @@ function analyzeAll(story){
     result = {
         atomic: atomicChecker(story),
         form: formChecker(story),
-
     }
 
     return result;
