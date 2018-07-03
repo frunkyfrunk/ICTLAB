@@ -26,4 +26,6 @@ function main(story){
         score: scoreResult,
         suggestions: suggestionResult
     }
+
+    return totalResult
 };
