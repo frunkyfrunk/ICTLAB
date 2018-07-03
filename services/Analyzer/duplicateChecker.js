@@ -1,6 +1,5 @@
 //Checking for duplicates using the cosine distance formula
 function calculateCosineDistance(story1, story2) {
-    
     var sentence1 = story1.replace(/,/g, "").split(" ");
     var sentence2 = story2.replace(/,/g, "").split(" ");
     var words = {};
@@ -39,32 +38,26 @@ function calculateCosineDistance(story1, story2) {
     return denominator / nominator;
 }
 
-function AddStoryToMatrix(story, stories) {
-    stories[story] = {};
-    for (var neighbour in stories) {
-        if (stories[neighbour] != story) {
-            var distance = calculateCosineDistance(neighbour, story);
-            stories[neighbour][story] = distance;
-            stories[story][neighbour] = distance;
-        }
-    }
-}
-
-function mainloop(stories) {
-    let matrix = {};
+function mainloop(stories, treshold) {
+    let duplicates = [];
     for (var i in stories) {
         var story = stories[i];
-        AddStoryToMatrix(story, matrix);
+        for (var j in stories) {
+            if (j != i) {
+                var neighbour = stories[j]
+                var distance = calculateCosineDistance(neighbour, story);
+                if (distance > treshold) {
+                    duplicates.push({
+                        story1: story,
+                        story2: neighbour,
+                        distance: distance
+                    })
+                }
+            }
+        }
     }
-    return matrix;
+    return duplicates;
 }
-module.exports = function (stories) {
-    return mainloop(stories)
+module.exports = function (stories, treshold) {
+    return mainloop(stories, treshold)
 };
-
-console.log(mainloop([
-    "test two",
-    "test one",
-    "one test",
-    "two test"
-]))

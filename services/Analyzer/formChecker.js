@@ -1,12 +1,16 @@
 const nlp = require("compromise");
 
 function checkForm(story) {
+    let role = checkRole(story)
+    let mean = checkMean(story)
+    let end = checkEnd(story)
     var result = {
         isWellFormed: false,
         form: {
-            role: checkRole(story),
-            mean: checkMean(story),
-            end: checkEnd(story)
+            role: role,
+            mean: mean,
+            end: end,
+            fullstripped: role + " " + mean + " " + end
         },
     }
     result.isWellFormed = checkAll(result.form)
@@ -28,7 +32,7 @@ function checkRole(story) {
 
 function checkMean(story) {
     var text;
-    story = story.replace(' to ',' ')
+    story = story.replace(' to ', ' ')
     if (story.match(/.*so that|so\s+(.*).*/i))
         text = story.split(/.*I (would like|need|want|have)* ?\s+(.*).*(so that|so)\s+/i)[2]
     else
