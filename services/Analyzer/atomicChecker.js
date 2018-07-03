@@ -1,3 +1,5 @@
+const nlp = require("compromise");
+
 function checkAtomic(story){
     var atomic = {
         isAtomic: "",
