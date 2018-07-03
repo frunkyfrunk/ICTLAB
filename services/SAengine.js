@@ -28,7 +28,6 @@ function getStory(story) {
         score: scoreResult,
         suggestions: suggestionsResult
     }
-
     return totalResult
 };
 
