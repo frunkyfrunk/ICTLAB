@@ -32,6 +32,10 @@ function checkAtomic(story){
     return atomic;
 }
 
+//console.log(checkAtomic("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))
+
+module.exports = function (story) {
+    return checkAtomic(story)
+};
 // console.log(checkAtomic("I am winning and I am faster, while being taller and stronger & live to the fullest + win"))
-// console.log(checkAtomic("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))
 // console.log(checkAtomic("Hello world"))
