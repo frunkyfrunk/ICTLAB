@@ -58,14 +58,14 @@
                             <div id="specificChart" class="donut-size">
                                 <div class="pie-wrapper">
                                     <span class="label">
-                                        <span class="num">{{card.suggestions.score}}</span><span class="smaller">%</span>
+                                        <span class="num">{{card.score}}</span><span class="smaller">%</span>
                                     </span>
-                                    <div v-if="card.suggestions.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
-                                        <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                                    <div v-if="card.score < 50" class="pie" style="clip: rect(auto, auto, auto, auto);">
+                                        <div :style="{ transform: 'rotate('+(360 * (card.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
                                         <div :style="{ transform: 'rotate('+ 180 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
                                     </div>
                                     <div v-else class="pie" style="clip: rect(0, 1em, 1em, 0.5em);">
-                                        <div :style="{ transform: 'rotate('+(360 * (card.suggestions.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
+                                        <div :style="{ transform: 'rotate('+(360 * (card.score / 100)) +'deg)'}" class="left-side half-circle" style="border-width: 0.1em;transform: rotate(180deg);"></div>
                                         <div :style="{ transform: 'rotate('+ 0 +'deg)'}" class="right-side half-circle" style="border-width: 0.1em;"></div>
                                     </div>
                                         <div class="shadow" style="border-width: 0.1em;"></div>
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-md-12">
                             <h4>Penalties</h4>
-                            <div v-for="suggestion in card.suggestions.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
+                            <div v-for="suggestion in card.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
                                 <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
                             </div>
                         </div>
@@ -107,7 +107,7 @@ export default {
   methods: {
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
-        return { story: card.name };
+        return card.name;
       });
       var $this = this
       $.ajax({
@@ -121,13 +121,17 @@ export default {
             let card = response.body.stories[i];
             $this.lambdaCards.push({
               id: card.id,
-              name: card.name,
+              name: card.story,
               suggestions: card.suggestions,
-              //tags: tags[i]
+              tags: card.tags,
+              score: $this.calculateScore(card.score)
             });
           }
         }
       });
+    },
+    calculateScore(points){
+        return points.lengthscore
     }
     /*
         async getAverageScoreLambda() {
