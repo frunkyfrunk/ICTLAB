@@ -21,6 +21,19 @@ provider:
   name: aws
   runtime: nodejs6.10
   region: eu-central-1
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
   memorySize: 128
   timeout: 10
   versionFunctions: false
@@ -72,7 +85,7 @@ functions:
           path: /myTrelloService/api
           cors: true 
           method: get
-    memorySize: 128
+    memorySize: 512
     timeout: 10   
   getAllProjects:
     handler: handler.getAllProjects
@@ -81,7 +94,7 @@ functions:
           path: /myTrelloService/allProjects/api
           cors: true 
           method: get
-    memorySize: 128
+    memorySize: 512
     timeout: 10 
   getAllBoardsByProject:
     handler: handler.getAllBoardsByProject
@@ -90,7 +103,7 @@ functions:
           path: /myTrelloService/getAllBoardsByProject/api
           cors: true 
           method: get
-    memorySize: 128
+    memorySize: 512
     timeout: 10
 
   getScore:
@@ -100,7 +113,7 @@ functions:
           path: /myTrelloService/getScore
           cors: true 
           method: post
-    memorySize: 128
+    memorySize: 512
     timeout: 10 
     
   getStoryCategories:
@@ -110,7 +123,7 @@ functions:
           path: /myTrelloService/getStoryCategories
           cors: true 
           method: post
-    memorySize: 128
+    memorySize: 512
     timeout: 10 
 
   # Standalone needs to be fixed!
@@ -121,7 +134,7 @@ functions:
           path: /myTrelloService/getAllcardsAverage
           cors: true 
           method: get
-    memorySize: 128
+    memorySize: 512
     timeout: 10   
     
   saveStories:
@@ -131,8 +144,27 @@ functions:
           path: /myTrelloService/saveStories
           cors: true 
           method: post
-    memorySize: 128
+    memorySize: 512
     timeout: 10
+
+# resources:
+#   Resources:
+#     StoriesDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       DeletionPolicy: Retain
+#       Properties:
+#         AttributeDefinitions:
+#           -
+#             AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           -
+#             AttributeName: id
+#             KeyType: HASH
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         TableName: ${self:provider.environment.DYNAMODB_TABLE}
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

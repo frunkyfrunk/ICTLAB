@@ -14,6 +14,7 @@ function getStory(story) {
   //first check if object is not undefined
   if (story != undefined) {
     //put the user story in the analyzer and get a result.
+    console.log(story)
     analyzerResult = analyzer(story.story);
   }
 
@@ -36,9 +37,10 @@ function getStory(story) {
 function main(arg) {
   let result;
   let stories = [];
-  
   for (var i in arg) {
     var story = arg[i];
+    console.log("array"+arg)
+    console.log("story"+story.story)
     stories.push(getStory(story));
   }
   result = {

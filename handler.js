@@ -1,12 +1,19 @@
 'use strict';
 const SAengine = require("./services/SAengine.js")
 
+const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const params = {
+ TableName: process.env.DYNAMODB_TABLE,
+};
+
 module.exports.getScore = (event, context, callback) => {
 
   console.log(event.body);
 
   console.log('results;');
-  console.log(SAengine(event.body));
+  console.log(event.body);
 
   const response = {
       statusCode: 200,
@@ -14,13 +21,47 @@ module.exports.getScore = (event, context, callback) => {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
       },
-      body: JSON.stringify({
-        body: SAengine(JSON.parse(event.body)),
-      }),        
+      body: JSON.stringify(SAengine(JSON.parse(event.body))),      
     };
     callback(null,response);
 };
 
+
+function calculateAverageScore(stories) {
+
+  var totalscore = 0;
+  var total = 0;
+
+  for (var i in stories) {
+
+    total++;
+
+    totalscore += stories[i].score;
+  }
+
+  return totalscore / total;
+}
+
+module.exports.getAllcardsAverage = (event, context, callback) => {
+  
+  var dbStories;
+
+  dynamoDb.scan(params, (error, result) => {
+
+  dbStories = result.Items;
+
+  console.log('DBSTORIES DEBUG');
+  console.log(dbStories);
+
+  calculateAverageScore(result.Items);
+    // create a response
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(result.Items),
+    };
+    callback(null, response);
+  });
+}
 
 
 // function saveStories(stories){
