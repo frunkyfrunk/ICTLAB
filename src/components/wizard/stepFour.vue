@@ -107,7 +107,7 @@ export default {
   methods: {
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
-        return card.name;
+        return {id : card.id, story: card.name};
       });
       var $this = this
       $.ajax({
