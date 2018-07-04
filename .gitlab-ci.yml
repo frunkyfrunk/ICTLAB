@@ -39,3 +39,5 @@ deploy backend:
   script:
   - npm install -g serverless
   - serverless deploy
+  only:
+  - branches@kevinkrs/ICTLAB
