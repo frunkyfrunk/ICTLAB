@@ -91,21 +91,34 @@
     </div>
 </template>
 <script>
-import axios from "axios"
+import axios from "axios";
 export default {
-    name:'stepfour',
-    props:{
-        cards: {
-        }
-    },
-    data(){
-        return{
-            averageUserstoriesScore: 0,
-            ownAverageUserstoriesScore: 0,
-            lambdaCards:[]
-        }
-    },
-    methods:{
+  name: "stepfour",
+  props: {
+    cards: {}
+  },
+  data() {
+    return {
+      averageUserstoriesScore: 0,
+      ownAverageUserstoriesScore: 0,
+      lambdaCards: []
+    };
+  },
+  methods: {
+    getScore(cards) {
+      var formattedcards = this.cards.map(card => {
+        return { story: card.name };
+      });
+      $.ajax({
+        type: "POST",
+        url:
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
+        data: JSON.stringify(formattedcards),
+        async: false,
+        success: function(response) {}
+      });
+    }
+    /*
         async getAverageScoreLambda() {
             var averageUserstoriesScore;
             await axios
@@ -183,19 +196,16 @@ export default {
         
         console.log(this.lambdaCards);
         this.loading = false;
-        }
-    },
-    mounted(){
-        this.getAverageScoreLambda();
-        this.lambdaCards = [];
-        this.getLambdas(this.cards);
-        this.$store.commit("addBoard", {
-          id: this.selectedBoard.id,
-          name: this.selectedBoard.name,
-          cards: this.lambdaCards
-        });
-    }
-    
-
-}
+        }*/
+  },
+  mounted() {
+    this.lambdaCards = [];
+    this.getScore(this.cards);
+    this.$store.commit("addBoard", {
+      id: this.selectedBoard.id,
+      name: this.selectedBoard.name,
+      cards: this.lambdaCards
+    });
+  }
+};
 </script>
