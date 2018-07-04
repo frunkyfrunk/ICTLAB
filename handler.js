@@ -3,7 +3,7 @@ const SAengine = require("./services/SAengine.js")
 
 module.exports.getScore = (event, context, callback) => {
 
-  console.log('GETSCORE METHOD');
+  console.log(event.body);
 
   const response = {
       statusCode: 200,
