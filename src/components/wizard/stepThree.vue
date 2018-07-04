@@ -19,103 +19,108 @@
 </div>
 </template>
 <script>
-import cardModal from "../modals/cardmodal.vue"
+import cardModal from "../modals/cardmodal.vue";
 export default {
-    name: "stepThree",
-    components:{
-        "card-modal": cardModal
-    },
-    props: {
-        selectedBoard: {
-            type: Object,
-            default: () => ({})
-        }
-    },
-    data(){
-        return{
-            cards:[],
-            cardModal: false,
-            modalInfo:{},
-            boardLists: [],
-            currentCard:{},   
-        }
-    },
-    methods:{
-        calculateScore(){
-            this.$emit("updateStep", 4)
-            this.$emit("updateCards", this.cards)
-        },
-        createNewStory(){
-            this.currentCard = {}
-            this.modalInfo = {
-                isNewCard: true,
-                boardList: this.boardLists
-            }
-        },
-        EmptyModalInfo(){
-            this.modalInfo = {
-                isNewCard: false,
-                boardList: this.boardLists
-            }
-        },
-        getAllCardsOfSingleBoard() {
-            this.cards = "";
-            var id = this.selectedBoard.id;
-            Trello.boards.get(
-                id + "/cards",
-                result => {
-                //success
-                this.cards = result;
-                },
-                result => {
-                //error
-                alert(result);
-                }
-            );
-        },
-        getListsFromBoards() {
-            var id = this.selectedBoard.id;
-            Trello.boards.get(
-                id + "/lists/",
-                result => {
-                //success
-                this.boardLists = result;
-                this.loading = false;
-                },
-                result => {
-                //error
-                alert(result);
-                }
-            );
-        },
-        refreshData() {
-            this.EmptyModalInfo();
-            this.getAllCardsOfSingleBoard();
-            this.getListsFromBoards();
-        },
-    },
-    created(){
-        this.getAllCardsOfSingleBoard();
-        this.getListsFromBoards();
+  name: "stepThree",
+  components: {
+    "card-modal": cardModal
+  },
+  props: {
+    selectedBoard: {
+      type: Object,
+      default: () => ({})
     }
+  },
+  data() {
+    return {
+      cards: [],
+      cardModal: false,
+      modalInfo: {},
+      boardLists: [],
+      currentCard: {}
+    };
+  },
+  methods: {
+    calculateScore() {
+      this.$emit("updateAnimation", true);
+      this.$emit("updateLoading", true);
+      this.$emit("updateCards", this.cards);
+      window.setTimeout(x => {
+        this.$emit("updateStep", 4);
+      }, 1000);
+      
+    },
+    createNewStory() {
+      this.currentCard = {};
+      this.modalInfo = {
+        isNewCard: true,
+        boardList: this.boardLists
+      };
+    },
+    EmptyModalInfo() {
+      this.modalInfo = {
+        isNewCard: false,
+        boardList: this.boardLists
+      };
+    },
+    getAllCardsOfSingleBoard() {
+      this.cards = "";
+      var id = this.selectedBoard.id;
+      Trello.boards.get(
+        id + "/cards",
+        result => {
+          //success
+          this.cards = result;
+        },
+        result => {
+          //error
+          alert(result);
+        }
+      );
+    },
+    getListsFromBoards() {
+      var id = this.selectedBoard.id;
+      Trello.boards.get(
+        id + "/lists/",
+        result => {
+          //success
+          this.boardLists = result;
+          this.loading = false;
+        },
+        result => {
+          //error
+          alert(result);
+        }
+      );
+    },
+    refreshData() {
+      this.EmptyModalInfo();
+      this.getAllCardsOfSingleBoard();
+      this.getListsFromBoards();
+    }
+  },
+  created() {
+    this.getAllCardsOfSingleBoard();
+    this.getListsFromBoards();
+  }
 };
 </script>
 <style>
 .storycard-text {
   color: black;
   padding: 10px;
-  height:100%;
-  background-color:#edfffd;
+  height: 100%;
+  background-color: #edfffd;
   border: 1px solid #5bc0de;
 }
 
 .storycard {
-  height:100%;
-  padding:10px;
+  height: 100%;
+  padding: 10px;
 }
 
-.storycard-text:hover{
-    cursor:pointer;
-    background-color:#5bc0de;
+.storycard-text:hover {
+  cursor: pointer;
+  background-color: #5bc0de;
 }
 </style>
