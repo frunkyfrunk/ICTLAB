@@ -27,7 +27,7 @@ deploy:
   - master
 
 ## Deployment - backend
-deploy_backend:
+deploy:
   image: amaysim/serverless
   stage: deploy_backend
   when: manual
