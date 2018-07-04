@@ -37,6 +37,7 @@ deploy backend:
   stage: deploy_backend
   when: manual
   script:
+  - apt-get install node
   - npm install -g serverless
   - serverless deploy
   only:
