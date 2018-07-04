@@ -40,4 +40,4 @@ deploy backend:
   - npm install -g serverless
   - serverless deploy
   only:
-  - branches@kevinkrs/ICTLAB
+  - branches@kevinkrs/ICTLAB/engine
