@@ -25,3 +25,13 @@ deploy:
     url: https://myapp.com
   only:
   - master
+
+## Deployment - backend
+deploy_backend:
+  image: amaysim/serverless
+  stage: deploy_backend
+  when: manual
+  script:
+  - serverless deploy
+  only:
+  - engine
