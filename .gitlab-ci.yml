@@ -28,10 +28,11 @@ deploy:
 
 ## Deployment - backend
 deploy_backend:
-  image: amaysim/serverless
+  image: napp/docker-aws-cli
   stage: deploy
   when: manual
   script:
+  - npm install -g serverless
   - serverless deploy
   only:
   - engine
