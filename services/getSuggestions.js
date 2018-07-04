@@ -5,7 +5,6 @@ function getSuggestions(analyzed) {
         suggestions.push({
             message: "Your user story shouldn't contain any questions"
         })
-
     }
     if (analyzed.nlp.hasquotes) {
         suggestions.push({
@@ -24,12 +23,12 @@ function getSuggestions(analyzed) {
     }
     if (analyzed.nlp.verbs > 5) {
         suggestions.push({
-            message: "Don't use too much verbs in your user story. Try to shorten the story or split it up into multiple stories."
+            message: "Don't use too many verbs in your user story. Try to shorten the story or split it up into multiple stories."
         })
     }
     if (analyzed.nlp.adjectives > 3) {
         suggestions.push({
-            message: "Don't use too much adjectives in your user story."
+            message: "Don't use too many adjectives in your user story."
         })
     }
     if (analyzed.nlp.nouns > 3) {
@@ -42,6 +41,36 @@ function getSuggestions(analyzed) {
             message: "Don't use too many adverbs. It's unnescessary and will make the user story harder to understand for the software engineers"
         })
     }
+    if (!analyzed.atomic.isAtomic) {
+        suggestions.push({
+            message: "Your user story is not atomic",
+            positions:analyzed.atomic.atomicArray
+        })
+    }
+    if (!analyzed.form.isWellFormed) {
+        let message = "Your user story is not well formed. The analyzer couldn't find the following parts:"
+        if (analyzed.form.form.role == false)
+            message += " role"
+        if (analyzed.form.form.mean == false)
+            message += " mean"
+        if (analyzed.form.form.end == false)
+            message += " end"
+        suggestions.push({
+            message: message
+        })
+    }
+    if (analyzed.minimal.length > 0) {
+        let message = "You have some characters in your user story that violate the minimal principle of a good user story:"
+        for (var i in analyzed.minimal) {
+            var char = analyzed.minimal[i]
+            message += " " + char.char
+        }
+        suggestions.push({
+            message: message,
+            positions: analyzed.minimal
+        })
+    }
+
     return suggestions
 }
 module.exports = function (analyzedstory) {

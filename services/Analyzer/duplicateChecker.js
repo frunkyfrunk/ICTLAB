@@ -46,7 +46,7 @@ function mainloop(stories, treshold) {
             if (j != i) {
                 var neighbour = stories[j]
                 var distance = calculateCosineDistance(neighbour, story);
-                if (distance > treshold) {
+                if (distance > treshold && duplicates.some(i=> i.story1 == neighbour) == false) {
                     duplicates.push({
                         story1: story,
                         story2: neighbour,

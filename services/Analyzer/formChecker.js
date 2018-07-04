@@ -26,7 +26,7 @@ function checkRole(story) {
     if (text != undefined)
         return text
     else {
-        return "Missing"
+        return ""
     }
 }
 
@@ -40,7 +40,7 @@ function checkMean(story) {
     if (text != undefined)
         return text
     else {
-        return "Missing"
+        return ""
     }
 }
 
@@ -49,12 +49,12 @@ function checkEnd(story) {
     if (text != undefined)
         return text
     else {
-        return "Missing"
+        return ""
     }
 }
 
 function checkAll(form) {
-    if (form.role != "Missing" && form.mean != "Missing" && form.end != "Missing")
+    if (form.role != "" && form.mean != "" && form.end != "")
         return true
     else {
         return false

@@ -20,6 +20,3 @@ function analyzeAll(story){
 module.exports = function (story) {
     return analyzeAll(story)
 };
-//console.log(analyzeAll("As a User, I am able to click a particular location from the map and thereby perform a search of landmarks associated with that latitude longitude combination"))
-//console.log(analyzeAll("As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant."))
-
