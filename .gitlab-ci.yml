@@ -33,11 +33,10 @@ deploy:
 
 ## Deployment - backend
 deploy backend:
-  image: napp/docker-aws-cli
+  image: node:10
   stage: deploy_backend
   when: manual
   script:
-  - apt-get -y install nodejs
   - npm install -g serverless
   - serverless deploy
   only:
