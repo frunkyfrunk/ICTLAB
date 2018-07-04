@@ -34,28 +34,6 @@ function getStory(story) {
 }
 
 function main(arg) {
-<<<<<<< HEAD
-    let result;
-    if (Array.isArray(arg)) {
-        console.log('isarray');
-        let stories = []
-        for (var i in arg) {
-            var story = arg[i]
-            stories.push(getStory(story))
-        }
-        result = {
-            stories: stories,
-            duplicates: getDuplicates(stories.map(function(story){
-                return story.analyzed.form.form.fullstripped
-            }),0.8)
-        }
-    } else if (typeof arg === 'string') {
-        getStory(arg)
-    } else {
-        result = "Unknown user story type. please provide an array with strings or a single string."
-    }
-    return result;
-=======
   let result;
   let stories = [];
   
@@ -73,7 +51,6 @@ function main(arg) {
     )
   };
   return result;
->>>>>>> origin/engine
 }
 
 module.exports = function(arg) {
