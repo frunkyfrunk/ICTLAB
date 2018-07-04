@@ -2,8 +2,6 @@
 const request = require('request');
 const nlp = require('compromise');
 
-const StoryCalculatorService = require('services/storyCalculateService.js');
-
 const uuid = require('uuid');
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
@@ -21,20 +19,20 @@ class storyService {
 
             console.log(data);
 
-            var storyName = data[index];
+            var story = data[index];
 
             // console.log('data score');
             // console.log(storyName.score);
 
-            console.log('DEBUG STORY NAME');
-            console.log(storyName);
+           // console.log('DEBUG STORY NAME');
+           // console.log(storyName);
           
             const params = {
               TableName: process.env.DYNAMODB_TABLE,
               Item: {
                 id: uuid.v1(),
-                story: storyName.story,
-                score: StoryCalculatorService.calculateScore(storyName.story).score,
+                story: story.story,
+                score: story.score,
               },
             };
 
