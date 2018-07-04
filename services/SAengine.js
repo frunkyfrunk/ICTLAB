@@ -35,6 +35,7 @@ function getStory(story) {
 function main(arg) {
     let result;
     if (Array.isArray(arg)) {
+        console.log('isarray');
         let stories = []
         for (var i in arg) {
             var story = arg[i]

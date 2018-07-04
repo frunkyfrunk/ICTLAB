@@ -3,7 +3,11 @@ const SAengine = require("./services/SAengine.js")
 
 module.exports.getScore = (event, context, callback) => {
 
-  console.log('GETSCORE METHOD');
+  console.log(event.body);
+
+
+  console.log('results;');
+  console.log(SAengine(event.body));
 
   const response = {
       statusCode: 200,
@@ -12,7 +16,7 @@ module.exports.getScore = (event, context, callback) => {
         'Access-Control-Allow-Credentials': true,
       },
       body: JSON.stringify({
-        body: SAengine(event.body),
+        body: SAengine(JSON.parse(event.body)),
       }),        
     };
     callback(null,response);
