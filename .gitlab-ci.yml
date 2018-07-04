@@ -37,7 +37,8 @@ deploy backend:
   stage: deploy_backend
   when: manual
   script:
+  - ls -al
   - npm install -g serverless
   - serverless deploy
   only:
-  - branches@kevinkrs/ICTLAB/engine
+  - engine
