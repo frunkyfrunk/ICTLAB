@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "Projects",
   data() {
@@ -20,13 +20,16 @@ export default {
   },
   created() {
     this.getAllProjectsData();
-  
   },
   methods: {
     getAllProjectsData() {
-        axios.get('https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/allProjects/api').then(
-            response => {this.stories = response.data.data}
-        );
+      axios
+        .get(
+          "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/allProjects/api"
+        )
+        .then(response => {
+          this.stories = response.data.data;
+        });
     }
   }
 };
