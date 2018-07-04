@@ -107,7 +107,7 @@ export default {
   methods: {
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
-        return {id : card.id, story: card.name};
+        return {"id" : card.id, "story": card.name};
       });
       var $this = this
       $.ajax({
@@ -117,8 +117,8 @@ export default {
         data: JSON.stringify(formattedcards),
         async: false,
         success: function(response) {
-          for (var i = 0; i < response.body.stories.length; i++) {
-            let card = response.body.stories[i];
+          for (var i = 0; i < response.stories.length; i++) {
+            let card = response.stories[i];
             $this.lambdaCards.push({
               id: card.id,
               name: card.story,
