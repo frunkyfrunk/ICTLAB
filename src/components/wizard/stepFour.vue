@@ -130,6 +130,17 @@ export default {
     };
   },
   methods: {
+    getAverage() {
+        var result = 0
+        for(var i = 0; i < this.lambdaCards.length; i++){
+            result = result + this.lambdaCards[i].score
+        }
+        
+        console.log(result + " " + i)
+        this.ownAverageUserstoriesScore = result / i
+        this.ownAverageUserstoriesScore = Math.round(this.ownAverageUserstoriesScore)
+    
+    },
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
         return { "id": card.id, "story": card.name };
@@ -158,6 +169,7 @@ export default {
               score: score.total
             });
           }
+        $this.getAverage()
         }
       });
     },
