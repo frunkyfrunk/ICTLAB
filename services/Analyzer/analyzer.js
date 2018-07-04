@@ -2,7 +2,7 @@ const nlp = require('compromise')
 const atomicChecker = require('./atomicChecker.js')
 const formChecker = require('./formChecker.js');
 const minimalChecker = require('./minimalChecker.js');
-const spellChecker = require('./spellChecker.js');
+//const spellChecker = require('./spellChecker.js');
 const nlpChecker = require('./nlpChecker.js');
 
 //insert user story and return analyzed object with all the details delivered

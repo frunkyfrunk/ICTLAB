@@ -1,4 +1,3 @@
-const nlp = require("compromise");
 
 function checkForm(story) {
     let role = checkRole(story)

@@ -7,9 +7,6 @@ function checkMinimal(story) {
     }
     var isMinimal;
     var minimalArray = [];
-    //var res = story.match(/[.*+?^${}()[\]\\]/g, '\\$&');
-    var filter = (/[.*+?^${}()[\]\\]/g, '\\$&')
-    // var res = nlp(story).match(filter).out('offset');
     var forbiddenchars = ['?', '^', '$', '{', '}', '(', ')', '[', ']', '/', '\/']
     var indices = [];
     for (var i = 0; i < story.length; i++) {
