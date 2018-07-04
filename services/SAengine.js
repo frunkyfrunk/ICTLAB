@@ -24,6 +24,7 @@ function getStory(story) {
     }
 
     var totalResult = {
+        story:story,
         analyzed: analyzerResult,
         score: scoreResult,
         suggestions: suggestionsResult
@@ -56,12 +57,3 @@ function main(arg) {
 module.exports = function (arg) {
     return main(arg)
 };
-
-// console.log(main([
-//     "As a Manny’s food service customer, I need to save, copy, print, and email my list so that I can edit it again, check a received shipment against a printed list, and send the list to a restaurant.",
-//     "As a business user, I would like a report of item profitability so that I can identify and highlight profitable items and consider what to do about underperforming items.",
-//     "As a customer ordering food, I want to locate previous food order lists so that I can see all the lists that I have.",
-//     "As a tester, I want to have detailed test plans so that when the system is completed, I can test the system.",
-//      "As a tester, I want to have detailed test plans so that when the system is completed, I can test the syste.",
-//      "As a tester,I want.",
-// ]));
