@@ -1,3 +1,8 @@
+stages:
+  - build
+  - deploy
+  - deploy_backend
+
 build site:
   image: node:10
   stage: build
@@ -29,7 +34,7 @@ deploy:
 ## Deployment - backend
 deploy_backend:
   image: napp/docker-aws-cli
-  stage: deploy
+  stage: deploy_backend
   when: manual
   script:
   - npm install -g serverless
