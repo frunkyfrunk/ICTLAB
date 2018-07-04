@@ -109,13 +109,24 @@ export default {
       var formattedcards = this.cards.map(card => {
         return { story: card.name };
       });
+      var $this = this
       $.ajax({
         type: "POST",
         url:
           "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
         data: JSON.stringify(formattedcards),
         async: false,
-        success: function(response) {}
+        success: function(response) {
+          for (var i = 0; i < response.body.stories.length; i++) {
+            let card = response.body.stories[i];
+            $this.lambdaCards.push({
+              id: card.id,
+              name: card.name,
+              suggestions: card.suggestions,
+              //tags: tags[i]
+            });
+          }
+        }
       });
     }
     /*
@@ -201,11 +212,11 @@ export default {
   mounted() {
     this.lambdaCards = [];
     this.getScore(this.cards);
-    this.$store.commit("addBoard", {
-      id: this.selectedBoard.id,
-      name: this.selectedBoard.name,
-      cards: this.lambdaCards
-    });
+    // this.$store.commit("addBoard", {
+    //   id: this.selectedBoard.id,
+    //   name: this.selectedBoard.name,
+    //   cards: this.lambdaCards
+    // });
   }
 };
 </script>
