@@ -32,7 +32,7 @@ deploy:
   - master
 
 ## Deployment - backend
-deploy_backend:
+deploy backend:
   image: napp/docker-aws-cli
   stage: deploy_backend
   when: manual
