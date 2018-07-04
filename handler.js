@@ -1,6 +1,6 @@
 'use strict';
 const SAengine = require("./services/SAengine.js")
-
+const StoryService = require('./services/storyService.js');
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -63,6 +63,26 @@ module.exports.getAllcardsAverage = (event, context, callback) => {
   });
 }
 
+module.exports.saveStories = (event, context, callback) => {
+  
+  var jsonData = JSON.parse(event.body);
+
+  console.log(jsonData);
+  
+  StoryService.saveStories(event.body);
+
+  const response = {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify({
+       'status' : 'ok'
+      }),
+    };
+    callback(null,response);
+};
 
 // function saveStories(stories){
 
