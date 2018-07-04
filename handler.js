@@ -53,11 +53,11 @@ module.exports.getAllcardsAverage = (event, context, callback) => {
   console.log('DBSTORIES DEBUG');
   console.log(dbStories);
 
-  calculateAverageScore(result.Items);
+  
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Items),
+      body: JSON.stringify(calculateAverageScore(result.Items)),
     };
     callback(null, response);
   });
