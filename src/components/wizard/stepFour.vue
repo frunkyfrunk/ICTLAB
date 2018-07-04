@@ -52,7 +52,6 @@
             <div class="col-md-12" v-for="duplicate in duplicates" :key="duplicate.id">
                 <div class="result container">
                     <div class="row">
-                        <h4>Similarity is {{duplicate.distance * 100}} %</h4>
                         <div class="col-md-12">
                             <div class="panel-heading board">
                                 <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story1></textarea>
@@ -133,9 +132,10 @@ export default {
   methods: {
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
-        return { id: card.id, story: card.name };
+        return { "id": card.id, "story": card.name };
       });
       var $this = this;
+      console.log(JSON.stringify(formattedcards))
       $.ajax({
         type: "POST",
         url:
@@ -154,7 +154,7 @@ export default {
                 card.suggestions,
                 score
               ),
-              tags: card.tags,
+              tags: card.analyzed.nlp.tags,
               score: score.total
             });
           }

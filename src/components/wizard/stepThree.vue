@@ -42,13 +42,8 @@ export default {
   },
   methods: {
     calculateScore() {
-      this.$emit("updateAnimation", true);
-      this.$emit("updateLoading", true);
+      this.$emit("updateStep", 4);
       this.$emit("updateCards", this.cards);
-      window.setTimeout(x => {
-        this.$emit("updateStep", 4);
-      }, 1000);
-      
     },
     createNewStory() {
       this.currentCard = {};
