@@ -4,6 +4,8 @@
   text-shadow: none;
   font-size: 1em;
 }
+
+
 .wizardAnimation{
    animation-name: move-wizard;
    animation-duration: 1s;

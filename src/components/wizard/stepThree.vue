@@ -1,7 +1,6 @@
 <template>
 <div>
-    <h3>Step 3: Select your user story to edit</h3>
-    <h4>Your current score is: --</h4>                 
+    <h3>Step 3: Select your user story to edit</h3>               
     <div class="row">
         <div class="col-md-12">
             <button type="button" class="btn btn-primary" @click="cardModal = true, createNewStory()">Add new user story</button>
@@ -80,7 +79,7 @@ export default {
         result => {
           //success
           this.boardLists = result;
-          this.loading = false;
+          this.$emit("updateLoading", false);
         },
         result => {
           //error

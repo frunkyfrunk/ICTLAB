@@ -38,7 +38,7 @@ export default {
         selectBoard(board, id){
             this.$emit("selectBoard", {id: board.id, board: board})
             this.$emit("updateStep", 3)
-            // this.$emit("updateLoading", true)
+            this.$emit("updateLoading", true)
         },
         getAllBoards() {
             let $self = this;

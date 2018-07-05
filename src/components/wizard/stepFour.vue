@@ -188,8 +188,10 @@ export default {
             });
           }
         $this.getAverage()
+        $this.$emit("updateLoading", false);
         }
       });
+      
     },
     calculateScore(points) {
       let score = 100;
