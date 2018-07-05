@@ -50,10 +50,10 @@
                 </div>
             </div>
 
-            <div v-if="duplicates.length > 0">
+            <div class="col-md-12" v-if="duplicates.length > 0">
                 <div class="col-md-12">
                         <h3>Duplicate stories</h3>
-                    </div>
+                </div>
                 <div class="col-md-12" v-for="duplicate in duplicates" :key="duplicate.id">
                     <div class="result container">
                         <div class="row">
@@ -127,7 +127,7 @@ export default {
   },
   data() {
     return {
-      averageUserstoriesScore: 0,
+      averageUserstoriesScore: 70,
       ownAverageUserstoriesScore: 0,
       lambdaCards: [],
       duplicates: []
