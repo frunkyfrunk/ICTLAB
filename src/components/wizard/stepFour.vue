@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="panel-heading board">
-                                <textarea readonly type="text" class="cardtext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=card.name></textarea>
+                                <div contenteditable='true' readonly type="text" class="storytext form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-html=card.name></div>
                             </div>
                         </div>
                         <div class="col-md-6"> 
@@ -130,6 +130,24 @@ export default {
     };
   },
   methods: {
+    markAtomic(result){
+
+        var strSpan1 = '<span style="color: red">'
+        var strSpan2 = "</span>"
+        var mapObj = {
+            ' and ': strSpan1 + ' and ' + strSpan2,
+            '&': strSpan1 + '&' + strSpan2,
+            ' or ': strSpan1 + ' or ' + strSpan2,
+            '\+': strSpan1 + '\+' + strSpan2   
+        }
+
+        result = result.replace(/ and | '%' | or |'\+'/gi, function(matched){
+            return mapObj[matched];
+        })
+
+        console.log(result)
+        return result;
+    },
     getAverage() {
         var result = 0
         for(var i = 0; i < this.lambdaCards.length; i++){
@@ -160,7 +178,7 @@ export default {
             let score = $this.calculateScore(card.score);
             $this.lambdaCards.push({
               id: card.id,
-              name: card.story,
+              name: $this.markAtomic(card.story),
               suggestions: $this.getSuggestionsPenalties(
                 card.suggestions,
                 score
@@ -170,8 +188,10 @@ export default {
             });
           }
         $this.getAverage()
+        $this.$emit("updateLoading", false);
         }
       });
+      
     },
     calculateScore(points) {
       let score = 100;
