@@ -34,12 +34,18 @@ function calculateAverageScore(stories) {
 
   for (var i in stories) {
 
-    total++;
+    if(stories[i].score != null && stories[i].score <= 100) {
 
-    totalscore += stories[i].score;
+      total++;
+      totalscore += stories[i].score;
+    }
+
   }
 
-  return totalscore / total;
+  console.log('totaal stories: ' + totalscore);
+  console.log('aantal score: ' + total);
+
+  return Math.round(totalscore / total);
 }
 
 module.exports.getAllcardsAverage = (event, context, callback) => {
@@ -51,8 +57,10 @@ module.exports.getAllcardsAverage = (event, context, callback) => {
   dbStories = result.Items;
 
   console.log('DBSTORIES DEBUG');
-  console.log(dbStories);
+  // console.log(dbStories);
 
+
+  console.log(calculateAverageScore(result.Items));
   
     // create a response
     const response = {
