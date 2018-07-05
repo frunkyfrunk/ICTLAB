@@ -6,8 +6,9 @@ describe("Function nlpchecker", function () {
     //3 verbs: need, save, edit
     //2 nouns: service, customer
     let result = service("As a Manny’s food service customer, I need to save my list so that I can edit it again.");
-    expect(result.verbs == 3)
-    expect(result.nouns == 2)
+    if(result.nouns != 2 || result.verbs != 3){
+      throw new Error('test failed');
+    }
   });
 
 });
