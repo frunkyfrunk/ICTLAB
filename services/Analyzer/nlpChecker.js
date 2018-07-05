@@ -1,3 +1,4 @@
+const nlp = require('compromise')
 function analyzeWords(story) {
   let doc = nlp(story);
   return {
