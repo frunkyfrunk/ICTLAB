@@ -8,8 +8,8 @@
 </template>
 <script>
 export default {
-    name: "stepone",
-    methods:{
+  name: "stepone",
+  methods: {
     authenticate() {
       let $self = this;
       window.Trello.authorize({
@@ -25,19 +25,21 @@ export default {
       });
     },
     authenticationSuccess() {
-    //   this.$swal({
-    //     title: "Authentication Succeedded",
-    //     timer: 1000,
-    //     type: "success",
-    //     showConfirmButton: false,
-    //     });
-      this.$emit("updateAnimation", true)
-      this.$emit("updateLoading", true)
-      window.setTimeout(x => {this.$emit("updateStep", 2)}, 1000)
+      //   this.$swal({
+      //     title: "Authentication Succeedded",
+      //     timer: 1000,
+      //     type: "success",
+      //     showConfirmButton: false,
+      //     });
+      this.$emit("updateAnimation", true);
+      this.$emit("updateLoading", true);
+      window.setTimeout(x => {
+        this.$emit("updateStep", 2);
+      }, 1000);
     },
     authenticationFailure() {
       this.$swal("Authentication Failed");
-    },
     }
+  }
 };
 </script>

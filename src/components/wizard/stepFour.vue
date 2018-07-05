@@ -46,6 +46,30 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12">
+                    <h3>Duplicate stories</h3>
+                </div>
+            <div class="col-md-12" v-for="duplicate in duplicates" :key="duplicate.id">
+                <div class="result container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-heading board">
+                                <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story1></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="panel-heading board">
+                                <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story2></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-md-12">
+                    <h3>Scoring for each story</h3>
+                </div>
             <div class="col-md-12" v-for="card in lambdaCards" :key="card.id">
                 <div class="result container">
                     <div class="row">
@@ -80,8 +104,8 @@
                         </div>
                         <div class="col-md-12">
                             <h4>Penalties</h4>
-                            <div v-for="suggestion in card.suggestions" :key="suggestion.id" class="alert alert-danger" role="alert">
-                                <b>- {{suggestion.penaltypoints}}</b> {{suggestion.message}}
+                            <div v-for="suggestion in card.suggestions" :key="suggestion.a" class="alert alert-danger" role="alert">
+                                <b>- {{suggestion.penalty}}</b> {{suggestion.message}}
                             </div>
                         </div>
                     </div>
@@ -101,15 +125,28 @@ export default {
     return {
       averageUserstoriesScore: 0,
       ownAverageUserstoriesScore: 0,
-      lambdaCards: []
+      lambdaCards: [],
+      duplicates: []
     };
   },
   methods: {
+    getAverage() {
+        var result = 0
+        for(var i = 0; i < this.lambdaCards.length; i++){
+            result = result + this.lambdaCards[i].score
+        }
+        
+        console.log(result + " " + i)
+        this.ownAverageUserstoriesScore = result / i
+        this.ownAverageUserstoriesScore = Math.round(this.ownAverageUserstoriesScore)
+    
+    },
     getScore(cards) {
       var formattedcards = this.cards.map(card => {
-        return {"id" : card.id, "story": card.name};
+        return { "id": card.id, "story": card.name };
       });
-      var $this = this
+      var $this = this;
+      console.log(JSON.stringify(formattedcards))
       $.ajax({
         type: "POST",
         url:
@@ -117,22 +154,89 @@ export default {
         data: JSON.stringify(formattedcards),
         async: false,
         success: function(response) {
+          $this.duplicates = response.duplicates;
           for (var i = 0; i < response.stories.length; i++) {
             let card = response.stories[i];
+            let score = $this.calculateScore(card.score);
             $this.lambdaCards.push({
               id: card.id,
               name: card.story,
-              suggestions: card.suggestions,
-              tags: card.tags,
-              score: $this.calculateScore(card.score)
+              suggestions: $this.getSuggestionsPenalties(
+                card.suggestions,
+                score
+              ),
+              tags: card.analyzed.nlp.tags,
+              score: score.total
             });
           }
+        $this.getAverage()
         }
       });
     },
-    calculateScore(points){
-        return points.lengthscore
+    calculateScore(points) {
+      let score = 100;
+      var lengthpenalty = Math.pow(points.lengthscore * 0.5, 2);
+      var adjectivepenalty = points.adjectivescore;
+      var formpenalty = points.formscore;
+      var adverbpenalty = points.adverbscore;
+      var atomicpenalty = points.atomicscore;
+      var minimalpenalty = points.minimalscore;
+      var nounpenalty = points.nounscore;
+      var verbpenalty = points.verbscore;
+      score =
+        score -
+        lengthpenalty -
+        adjectivepenalty -
+        formpenalty -
+        adverbpenalty -
+        atomicpenalty -
+        minimalpenalty -
+        nounpenalty -
+        verbpenalty;
+      return {
+        total: score < 0 ? 0 : score,
+        lengthpenalty: lengthpenalty,
+        adjectivepenalty: adjectivepenalty,
+        formpenalty: formpenalty,
+        adverbpenalty: adverbpenalty,
+        atomicpenalty: atomicpenalty,
+        minimalpenalty: minimalpenalty,
+        nounpenalty: nounpenalty,
+        verbpenalty: verbpenalty
+      };
+    },
+    getSuggestionsPenalties(suggestions, score) {
+      for (var i in suggestions) {
+        let suggestion = suggestions[i];
+        if (suggestion.id == 2 || suggestion.id == 3) {
+          suggestions[i].penalty = score.lengthpenalty;
+        }
+        if (suggestion.id == 4) {
+          suggestions[i].penalty = score.verbpenalty;
+        }
+        if (suggestion.id == 5) {
+          suggestions[i].penalty = score.adjectivepenalty;
+        }
+        if (suggestion.id == 6) {
+          suggestions[i].penalty = score.nounpenalty;
+        }
+        if (suggestion.id == 7) {
+          suggestions[i].penalty = score.adverbpenalty;
+        }
+        if (suggestion.id == 8) {
+          suggestions[i].penalty = score.atomicpenalty;
+        }
+        if (suggestion.id == 9) {
+          suggestions[i].penalty = score.formpenalty;
+        }
+        if (suggestion.id == 10) {
+          suggestions[i].penalty = score.minimalpenalty;
+        }
+      }
+
+      return suggestions;
     }
+
     /*
         async getAverageScoreLambda() {
             var averageUserstoriesScore;
