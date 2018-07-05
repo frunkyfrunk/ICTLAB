@@ -277,9 +277,9 @@ export default {
         $.ajax({
             type: "GET",
             url: "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage",
-            async:true,
+            async:false,
             success: function(response){
-                console.log(response)
+                console.log('response' + response)
                 $self.averageUserstoriesScore = response
             }
         });
