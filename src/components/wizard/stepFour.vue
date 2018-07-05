@@ -69,6 +69,7 @@
                             </div>
                         </div>
                     </div>
+                    {{duplicate.distance}}
                 </div>
             </div>
             <div class="col-md-12">
