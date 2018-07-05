@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Results</h3>
+        <h3>Resultaten</h3>
         <div class="row">
             <div class="col-md-12">
                 <div class="result container">
