@@ -5,6 +5,7 @@
         <div class="col-md-12">
             <button type="button" class="btn btn-primary" @click="cardModal = true, createNewStory()">Add new user story</button>
             <button type="button" class="btn btn-warning" @click="calculateScore()">Calculate Score</button>
+            <button @click="previousStep()" type="button" class="btn btn-info">Back</button>
         </div>
         <card-modal v-if="cardModal" @close="cardModal = false" :modalInfo="modalInfo" :currentCard="currentCard" v-on:update="refreshData()"></card-modal>
         <div class="col-md-12" v-for="card in cards" :key="card.id">
@@ -40,6 +41,9 @@ export default {
     };
   },
   methods: {
+    previousStep(){
+      this.$emit("updateStep", 2);
+    },
     calculateScore() {
       this.$emit("updateStep", 4);
       this.$emit("updateCards", this.cards);

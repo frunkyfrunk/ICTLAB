@@ -45,26 +45,30 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                    <h3>Duplicate stories</h3>
+                <div>
+                    <button @click="previousStep()" type="button" class="btn btn-info">Back</button>
                 </div>
-            <div class="col-md-12" v-for="duplicate in duplicates" :key="duplicate.id">
-                <div class="result container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel-heading board">
-                                <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story1></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="panel-heading board">
-                                <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story2></textarea>
-                            </div>
-                        </div>
-                        
+            </div>
+
+            <div v-if="duplicates.length > 0">
+                <div class="col-md-12">
+                        <h3>Duplicate stories</h3>
                     </div>
-                    
+                <div class="col-md-12" v-for="duplicate in duplicates" :key="duplicate.id">
+                    <div class="result container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel-heading board">
+                                    <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story1></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="panel-heading board">
+                                    <textarea readonly type="text" rows="2" class="form-control" placeholder="Userstory" aria-describedby="basic-addon1" v-model=duplicate.story2></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-12">
@@ -130,8 +134,10 @@ export default {
     };
   },
   methods: {
+    previousStep(){
+        this.$emit("updateStep", 3);
+    },
     markAtomic(result){
-
         var strSpan1 = '<span style="color: red">'
         var strSpan2 = "</span>"
         var mapObj = {
@@ -154,7 +160,6 @@ export default {
             result = result + this.lambdaCards[i].score
         }
         
-        console.log(result + " " + i)
         this.ownAverageUserstoriesScore = result / i
         this.ownAverageUserstoriesScore = Math.round(this.ownAverageUserstoriesScore)
     
@@ -255,96 +260,46 @@ export default {
       }
 
       return suggestions;
+    },
+
+    async getAverageUserStoryScore(){
+        // $.ajax({
+        //     type: "POST",
+        //     url:
+        //     "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/saveStories",
+        //     data: JSON.stringify(formattedcards),
+        //     async: false,
+        //     success: function(response) {
+
+        //     }
+        // });
+        var $self = this;
+        $.ajax({
+            type: "GET",
+            url: "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage",
+            async:true,
+            success: function(response){
+                console.log(response)
+                $self.averageUserstoriesScore = response
+            }
+        });
+        // var averageUserstoriesScore;
+        // await axios
+        //         .get(
+        //         "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage"
+        //         )
+        //         .then(function(response) {
+        //         averageUserstoriesScore = response.data;
+        //         console.log("HELLO")
+        //         })
+        //         .catch(error => error);
+        // this.averageUserstoriesScore = averageUserstoriesScore;
     }
-
-    /*
-        async getAverageScoreLambda() {
-            var averageUserstoriesScore;
-            await axios
-                .get(
-                "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getAllcardsAverage"
-                )
-                .then(function(response) {
-                averageUserstoriesScore = response.data.data;
-                })
-                .catch(error => error);
-            this.averageUserstoriesScore = averageUserstoriesScore;
-        },
-        async getLambdas(cards) {
-        var ownAverageUserstoriesScore = 0;      
-        var tags;
-        var suggestions;
-        var test = 0;
-        var totalBoardScore = 0;
-        var formattedcards = this.cards.map(card => {
-            return { story: card.name };
-        });
-
-        $.ajax({
-            type: "POST",
-            url:
-            "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getStoryCategories",
-            data: JSON.stringify(formattedcards),
-            async: false,
-            success: function(response) {
-            tags = response.data;
-            console.log(tags);
-            }
-        });
-
-    // Add stories to database
-        $.ajax({
-            type: "POST",
-            url:
-            "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/saveStories",
-            data: JSON.stringify(formattedcards),
-            async: false,
-            success: function(response) {
-            }
-        });
-
-        $.ajax({
-            type: "POST",
-            url:
-            "https://qfq3vqxrn4.execute-api.eu-central-1.amazonaws.com/dev/myTrelloService/getScore",
-            data: JSON.stringify(formattedcards),
-            async: false,
-            success: function(response) {
-            suggestions = response.data;
-
-            ownAverageUserstoriesScore = response.averagescore;
-
-            console.log(ownAverageUserstoriesScore);
-            console.log(suggestions);
-            }
-        });
-
-        this.ownAverageUserstoriesScore = ownAverageUserstoriesScore;
-
-        console.log('USER SCORE: ' + this.ownAverageUserstoriesScore);
-      
-        for (var i = 0; 1 < cards.length; i++) {
-            let card = cards[i];
-            this.lambdaCards.push({
-            id: card.id,
-            name: card.name,
-            suggestions: suggestions[i],
-            tags: tags[i]
-            });
-        }
-        
-        console.log(this.lambdaCards);
-        this.loading = false;
-        }*/
   },
   mounted() {
     this.lambdaCards = [];
     this.getScore(this.cards);
-    // this.$store.commit("addBoard", {
-    //   id: this.selectedBoard.id,
-    //   name: this.selectedBoard.name,
-    //   cards: this.lambdaCards
-    // });
+    this.getAverageUserStoryScore();
   }
 };
 </script>
